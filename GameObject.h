@@ -4,9 +4,9 @@
 #include "IObject.h"
 #include "Transform.h"
 
-struct Properties() {
+struct Properties {
     public:
-        Properties(std::string textureID, int x, int y, int width, int height, SDL_RendererFLip flip = SDL_FLIP_NONE) {
+        Properties (std::string textureID, int x, int y, int width, int height, SDL_RendererFLip flip = SDL_FLIP_NONE) {
             X = x;
             Y = y;
             FLip = flip;
@@ -18,7 +18,7 @@ struct Properties() {
         std::string TextureID;
         int Width, Height;
         float X, Y;
-        SDL_RendererFLip;
+        SDL_RendererFLip Flip;
 
 };
 
