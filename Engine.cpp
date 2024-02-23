@@ -1,5 +1,7 @@
 #include "Engine.h"
 #include "TextureManager.h"
+#include "Vector2D.h"
+#include "Transform.h"
 
 Engine* Engine::s_Instance = nullptr;
 
@@ -22,6 +24,9 @@ bool Engine::Init()
     }
 
     TextureManager::GetInstance()->Load("chu", "LamGame/picture/chu.png");
+
+    Vector2D v1, v2;
+
     return m_IsRunning = true;
 }
 
