@@ -1,15 +1,16 @@
-#ifdef GAMEOBJECT_H
+#ifndef GAMEOBJECT_H
 #define GAMEOBJECT_H
 
 #include "IObject.h"
 #include "Transform.h"
+#include "SDL.h"
 
 struct Properties {
     public:
-        Properties (std::string textureID, int x, int y, int width, int height, SDL_RendererFLip flip = SDL_FLIP_NONE) {
+        Properties (std::string textureID, float x, float y, int width, int height, SDL_RendererFlip flip = SDL_FLIP_NONE) {
             X = x;
             Y = y;
-            FLip = flip;
+            Flip = flip;
             Width = width;
             Height = height;
             TextureID = textureID;
@@ -18,29 +19,29 @@ struct Properties {
         std::string TextureID;
         int Width, Height;
         float X, Y;
-        SDL_RendererFLip Flip;
+        SDL_RendererFlip Flip;
 
 };
 
 class GameObject : public IObject
 {
     public:
-        GameObject(Properties* pros) m_TextureID(pros->TextureID),
-            m_Width(pros->Width), m_Height(pros->Height), m_FLip(pros->FLip) {
-            
-            m_Transform = new Transform(pros->X, pros->Y);
+        GameObject(Properties* props) : m_TextureID(props->TextureID),
+        m_Width(props->Width), m_Height(props->Height), m_Flip(props->Flip) {
+
+        m_Transform = new Transform(props->X, props->Y);
         }
 
         virtual void Draw() = 0;
         virtual void Update(float dt) = 0;
-        virtual void Clean()
+        virtual void Clean() = 0;
 
     protected:
         Transform* m_Transform;
         int m_Width, m_Height;
         std::string m_TextureID;
         SDL_RendererFlip m_Flip;
-}:
-#endif 
+};
+#endif
 
 

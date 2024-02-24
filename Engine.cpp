@@ -1,13 +1,14 @@
 #include "Engine.h"
 #include "TextureManager.h"
-#include "Vector2D.h"
-#include "Transform.h"
+
+#include "Warrior.h"
 
 Engine* Engine::s_Instance = nullptr;
+Warrior* player = nullptr;
 
 bool Engine::Init()
 {
-    if (SDL_Init(SDL_INIT_VIDEO) != 0 && IMG_Init(IMG_INIT_PNG | IMG_INIT_PNG) != 0) {
+    if (SDL_Init(SDL_INIT_VIDEO) != 0 && IMG_Init(IMG_INIT_JPG | IMG_INIT_PNG) != 0) {
         SDL_Log("Failed to initialize SDL: %s", SDL_GetError());
         return false;
     }
@@ -23,9 +24,8 @@ bool Engine::Init()
         return false;
     }
 
-    TextureManager::GetInstance()->Load("chu", "LamGame/picture/chu.png");
-
-    Vector2D v1, v2;
+    TextureManager::GetInstance()->Load("player", "LamGame/picture/character.png");
+    player = new Warrior(new Properties("player", 100, 100, 86, 145));
 
     return m_IsRunning = true;
 }
@@ -33,12 +33,14 @@ bool Engine::Init()
 void Engine::Render()
 {
     SDL_SetRenderDrawColor(m_Renderer, 124, 218, 254, 255);
+    SDL_RenderClear(m_Renderer);
+
+    player->Draw();
     SDL_RenderPresent(m_Renderer);
-    TextureManager::GetInstance()->Draw("chu", 100, 100, 1272, 673);
 }
 void Engine::Update()
 {
-
+    player->Update(0);
 }
 void Engine::Events()
 {
