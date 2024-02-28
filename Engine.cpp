@@ -1,10 +1,12 @@
 #include "Engine.h"
 #include "TextureManager.h"
-
 #include "Warrior.h"
+#include "Input.h"
+#include "Animation.h"
 
 Engine* Engine::s_Instance = nullptr;
 Warrior* player = nullptr;
+Warrior* player_run = nullptr;
 
 bool Engine::Init()
 {
@@ -12,7 +14,7 @@ bool Engine::Init()
         SDL_Log("Failed to initialize SDL: %s", SDL_GetError());
         return false;
     }
-    m_Window = SDL_CreateWindow("ADVENTURE KNIGHT", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_WIDTH, SCREEN_HEIGHT, 0);
+    m_Window = SDL_CreateWindow("ADVENTURE SONGOKU", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_WIDTH, SCREEN_HEIGHT, 0);
     if (m_Window == nullptr) {
         SDL_Log("Failed to create Window: %s", SDL_GetError());
         return false;
@@ -23,9 +25,11 @@ bool Engine::Init()
         SDL_Log("Failed to create Renderer: %s", SDL_GetError());
         return false;
     }
+    TextureManager::GetInstance()->Load("player", "LamGame/Picture/dungim_right.png");
+    TextureManager::GetInstance()->Load("player_run", "LamGame/Picture/run_right.png");
+    TextureManager::GetInstance()->Load("player_skill1", "LamGame/Picture/skill1_right.png");
 
-    TextureManager::GetInstance()->Load("player", "LamGame/picture/character.png");
-    player = new Warrior(new Properties("player", 100, 100, 86, 145));
+    player = new Warrior(new Properties("player", 100, 200, 60, 75));
 
     return m_IsRunning = true;
 }
@@ -34,23 +38,18 @@ void Engine::Render()
 {
     SDL_SetRenderDrawColor(m_Renderer, 124, 218, 254, 255);
     SDL_RenderClear(m_Renderer);
-
+    
     player->Draw();
+
     SDL_RenderPresent(m_Renderer);
 }
 void Engine::Update()
-{
+{   
     player->Update(0);
 }
 void Engine::Events()
 {
-    SDL_Event event;
-    SDL_PollEvent(&event);
-    switch (event.type) {
-    case SDL_QUIT:
-        Quit();
-        break;
-    }
+    Input::GetInstance()->Listen();
 }
 void Engine::Quit()
 {

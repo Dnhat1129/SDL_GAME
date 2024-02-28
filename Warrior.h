@@ -2,8 +2,8 @@
 #define WARRIOR_H
 
 #include "Character.h"
-#include "Animation.h"
 #include "RigidBody.h"
+#include "Animation.h"
 
 class Warrior : public Character {
     public:
@@ -13,7 +13,7 @@ class Warrior : public Character {
         virtual void Clean();
         virtual void Update(float dt);
 
-    private:
+    public:
         Animation* m_Animation;
         RigidBody* m_RigidBody;
 };

@@ -6,7 +6,7 @@ void Animation::Update() {
 }
 
 void Animation::Draw(float x, float y, int spriteWidth, int spriteHeight) {
-	TextureManager::GetInstance()->DrawFrame(m_TextureID, x, y, spriteWidth, spriteHeight, m_SpriteFrame, m_Flip);
+	TextureManager::GetInstance()->DrawFrame(m_TextureID, x, y, spriteWidth, spriteHeight, m_SpriteRow, m_SpriteFrame, m_Flip);
 }
 void Animation::SetProps(std::string textureID, int spriteRow, int frameCount, int animSpeed, SDL_RendererFlip flip) {
 	m_TextureID = textureID;
