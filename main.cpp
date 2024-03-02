@@ -1,4 +1,8 @@
 #include "Engine.h"
+#include "Timer.h"
+
+
+
 int main(int arc, char* argv[]) {
 
 	Engine::GetInstance()->Init();
@@ -6,6 +10,7 @@ int main(int arc, char* argv[]) {
 		Engine::GetInstance()->Events();
 		Engine::GetInstance()->Update();
 		Engine::GetInstance()->Render();
+		Timer::GetInstance()->Tick();
 	}
 
 	Engine::GetInstance()->Clean();

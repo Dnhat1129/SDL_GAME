@@ -3,6 +3,9 @@
 #include "Warrior.h"
 #include "Input.h"
 #include "Animation.h"
+#include "Timer.h"
+#include "MapParser.h"
+#include <iostream>
 
 Engine* Engine::s_Instance = nullptr;
 Warrior* player = nullptr;
@@ -14,7 +17,11 @@ bool Engine::Init()
         SDL_Log("Failed to initialize SDL: %s", SDL_GetError());
         return false;
     }
-    m_Window = SDL_CreateWindow("ADVENTURE SONGOKU", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_WIDTH, SCREEN_HEIGHT, 0);
+
+    SDL_WindowFlags window_flags = (SDL_WindowFlags)(SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI);
+
+    m_Window = SDL_CreateWindow("ADVENTURE SONGOKU", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_WIDTH, SCREEN_HEIGHT, window_flags);
+
     if (m_Window == nullptr) {
         SDL_Log("Failed to create Window: %s", SDL_GetError());
         return false;
@@ -25,6 +32,13 @@ bool Engine::Init()
         SDL_Log("Failed to create Renderer: %s", SDL_GetError());
         return false;
     }
+
+    if (!MapParser::GetInstance()->Load()) {
+        std::cout << "Failed to load" << std::endl;
+    }
+
+    m_LevelMap = MapParser::GetInstance()->GetMaps("MAP");
+
     TextureManager::GetInstance()->Load("player", "LamGame/Picture/dungim_right.png");
     TextureManager::GetInstance()->Load("player_run", "LamGame/Picture/run_right.png");
     TextureManager::GetInstance()->Load("player_skill1", "LamGame/Picture/skill1_right.png");
@@ -39,22 +53,30 @@ void Engine::Render()
     SDL_SetRenderDrawColor(m_Renderer, 124, 218, 254, 255);
     SDL_RenderClear(m_Renderer);
     
+    m_LevelMap->Render();
     player->Draw();
 
     SDL_RenderPresent(m_Renderer);
 }
+
 void Engine::Update()
 {   
-    player->Update(0);
+    
+    float dt = Timer::GetInstance()->GetDeltaTime();
+    m_LevelMap->Update();
+    player->Update(dt);
 }
+
 void Engine::Events()
 {
     Input::GetInstance()->Listen();
 }
+
 void Engine::Quit()
 {
     m_IsRunning = false;
 }
+
 bool Engine::Clean()
 {
     TextureManager::GetInstance()->Clean();
