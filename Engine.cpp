@@ -6,6 +6,7 @@
 #include "Timer.h"
 #include "MapParser.h"
 #include <iostream>
+#include "Camera.h"
 
 Engine* Engine::s_Instance = nullptr;
 Warrior* player = nullptr;
@@ -37,13 +38,17 @@ bool Engine::Init()
         std::cout << "Failed to load" << std::endl;
     }
 
-    m_LevelMap = MapParser::GetInstance()->GetMaps("MAP");
+    m_LevelMap = MapParser::GetInstance()->GetMap("MAP");
 
     TextureManager::GetInstance()->Load("player", "LamGame/Picture/dungim_right.png");
     TextureManager::GetInstance()->Load("player_run", "LamGame/Picture/run_right.png");
     TextureManager::GetInstance()->Load("player_skill1", "LamGame/Picture/skill1_right.png");
+    TextureManager::GetInstance()->Load("player_jump", "LamGame/Picture/fly + jump/jump.png");
+    TextureManager::GetInstance()->Load("bg", "LamGame/Picture/Bg/background0.png");
 
     player = new Warrior(new Properties("player", 100, 200, 60, 75));
+
+    Camera::GetInstance()->SetTarget(player->GetOrigin());
 
     return m_IsRunning = true;
 }
@@ -53,6 +58,8 @@ void Engine::Render()
     SDL_SetRenderDrawColor(m_Renderer, 124, 218, 254, 255);
     SDL_RenderClear(m_Renderer);
     
+    TextureManager::GetInstance()->Draw("bg", 0, 0, 1920, 1080);
+
     m_LevelMap->Render();
     player->Draw();
 
@@ -65,6 +72,7 @@ void Engine::Update()
     float dt = Timer::GetInstance()->GetDeltaTime();
     m_LevelMap->Update();
     player->Update(dt);
+    Camera::GetInstance()->Update(dt);
 }
 
 void Engine::Events()

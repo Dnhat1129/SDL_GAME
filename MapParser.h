@@ -12,7 +12,7 @@ class MapParser {
 		bool Load();
 		void Clean();
 
-		inline GameMap* GetMaps(std::string id) { return m_MapDict[id]; };
+		inline GameMap* GetMap(std::string id) { return m_MapDict[id]; };
 		inline static MapParser* GetInstance() {
 			if (s_Instance != nullptr)
 				return s_Instance;
