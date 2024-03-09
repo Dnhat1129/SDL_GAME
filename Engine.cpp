@@ -7,10 +7,11 @@
 #include "MapParser.h"
 #include <iostream>
 #include "Camera.h"
+#include "Enemy.h"
 
 Engine* Engine::s_Instance = nullptr;
 Warrior* player = nullptr;
-Warrior* player_run = nullptr;
+Enemy* enemy = nullptr;
 
 bool Engine::Init()
 {
@@ -41,12 +42,24 @@ bool Engine::Init()
     m_LevelMap = MapParser::GetInstance()->GetMap("MAP");
 
     TextureManager::GetInstance()->Load("player", "LamGame/Picture/dungim_right.png");
+
     TextureManager::GetInstance()->Load("player_run", "LamGame/Picture/run_right.png");
     TextureManager::GetInstance()->Load("player_skill1", "LamGame/Picture/skill1_right.png");
-    TextureManager::GetInstance()->Load("player_jump", "LamGame/Picture/fly + jump/jump.png");
+    TextureManager::GetInstance()->Load("player_jump", "LamGame/Picture/fly + jump/nhay.png");
+    TextureManager::GetInstance()->Load("player_fall", "LamGame/Picture/fly + jump/roi_xuong.png");
+
+    TextureManager::GetInstance()->Load("enemy", "LamGame/Picture/enemy/so3.png");
+    TextureManager::GetInstance()->Load("enemy_jump", "LamGame/Picture/enemy/so3_nhay.png");
+    TextureManager::GetInstance()->Load("enemy_fall", "LamGame/Picture/enemy/so3_roi.png");
+    TextureManager::GetInstance()->Load("enemy_run", "LamGame/Picture/enemy/so3_run.png");
+
     TextureManager::GetInstance()->Load("bg", "LamGame/Picture/Bg/background0.png");
 
-    player = new Warrior(new Properties("player", 100, 200, 60, 75));
+
+    player = new Warrior(new Properties("player",100,100, 60, 75));
+ 
+    enemy = new Enemy(new Properties("enemy", 200, 100, 60, 75));
+
 
     Camera::GetInstance()->SetTarget(player->GetOrigin());
 
@@ -57,11 +70,12 @@ void Engine::Render()
 {
     SDL_SetRenderDrawColor(m_Renderer, 124, 218, 254, 255);
     SDL_RenderClear(m_Renderer);
-    
     TextureManager::GetInstance()->Draw("bg", 0, 0, 1920, 1080);
 
     m_LevelMap->Render();
     player->Draw();
+    enemy->Draw();
+
 
     SDL_RenderPresent(m_Renderer);
 }
@@ -72,6 +86,7 @@ void Engine::Update()
     float dt = Timer::GetInstance()->GetDeltaTime();
     m_LevelMap->Update();
     player->Update(dt);
+    enemy->Update(dt);
     Camera::GetInstance()->Update(dt);
 }
 

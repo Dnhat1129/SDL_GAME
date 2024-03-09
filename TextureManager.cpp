@@ -21,7 +21,7 @@ void TextureManager::Draw(std::string id, int x, int y, int width, int heigt, SD
 
 
 void TextureManager::DrawFrame(std::string id, int x, int y, int width, int heigt, int row, int frame, SDL_RendererFlip flip) {
-    SDL_Rect srcRect = { width * frame, heigt * (row - 1) , width, heigt };
+    SDL_Rect srcRect = { width * frame, heigt * row , width, heigt };
     Vector2D cam = Camera::GetInstance()->GetPosition();
     SDL_Rect dstRect = { x-cam.X, y-cam.Y, width, heigt };
     SDL_RenderCopyEx(Engine::GetInstance()->GetRenderer(), m_TextureMap[id], &srcRect, &dstRect, 0, nullptr, flip);

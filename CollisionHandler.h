@@ -24,6 +24,8 @@ class CollisionHandler
 		TileMap m_CollisionTilemap;
 		TileLayer* m_CollisionLayer;
 		static CollisionHandler* s_Instance;
+
+
 };
 
 #endif // !COLLISIONHANDER_H

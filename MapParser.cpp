@@ -3,7 +3,7 @@
 MapParser* MapParser::s_Instance = nullptr;
 
 bool MapParser::Load() {
-	if (!Parse("MAP", "LamGame/Picture/maps/map1.tmx")) {
+	if (!Parse("MAP", "LamGame/Picture/maps/map3.tmx")) {
 		return false;
 	}
 	return true;

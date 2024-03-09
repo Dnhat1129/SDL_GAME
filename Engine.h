@@ -8,6 +8,7 @@
 #include <SDL_mixer.h>
 #include <SDL_ttf.h>
 #include "GameMap.h"
+#include "Warrior.h"
 
 /// Screen
 const int SCREEN_WIDTH  = 960;
@@ -34,6 +35,7 @@ public:
 	inline GameMap* GetMap() { return m_LevelMap; }
 	inline bool IsRunning() { return m_IsRunning; }
 	inline SDL_Renderer* GetRenderer() { return m_Renderer; }
+	Warrior* GetWarrior() { return player; }
 private:
 	bool m_IsRunning;
 
@@ -41,7 +43,7 @@ private:
 	SDL_Window* m_Window;
 	SDL_Renderer* m_Renderer;
 	static Engine* s_Instance;
-	
+	Warrior* player;
 };
 
 
