@@ -10,8 +10,8 @@ class Collider {
 
 		void Set(int x, int y, int w, int h) {
 			m_Box = {
-				x + m_Buffer.x,
-				y + m_Buffer.y,
+				x - m_Buffer.x,
+				y - m_Buffer.y,
 				w - m_Buffer.w,
 				h - m_Buffer.h 
 			};

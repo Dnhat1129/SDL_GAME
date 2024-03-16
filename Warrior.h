@@ -30,12 +30,12 @@ class Warrior : public GameObject {
             m_IsAttacking = false;
 
             m_Flip = SDL_FLIP_NONE;
-            m_JumpTime = JUMP_TIME;
             m_JumpForce = JUMP_FORCE;
             m_AttackTime = ATTACK_TIME;
 
             m_Collider = new Collider();
-            m_Collider->SetBuffer(-5, 10, 15, 60);
+            //m_Collider->SetBuffer(-20, -10, 30, 42);
+            m_Collider->SetBuffer(-10, 0, 15, 0);
 
             m_RigidBody = new RigidBody();
             m_RigidBody->SetGravity(3.0f);
@@ -48,6 +48,7 @@ class Warrior : public GameObject {
         virtual void Update(float dt);
         Transform* GetPosition() { return m_Transform; }
         SDL_Rect GetBox() { return m_Collider->Get(); }
+        SDL_RendererFlip GetFlip() { return m_Flip; }
 
     private: 
         void AnimationState();
@@ -58,7 +59,6 @@ class Warrior : public GameObject {
         bool m_IsGrounded;
         bool m_IsAttacking;
 
-        float m_JumpTime;
         float m_JumpForce;
         float m_AttackTime;
 

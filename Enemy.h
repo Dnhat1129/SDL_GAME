@@ -8,11 +8,13 @@
 #include "Vector2D.h"
 #include <vector>
 #include "Engine.h"
+#include "TileLayer.h"
+#include "ShortestPath.h"
 
 #define JUMP_TIME 15.0f
-#define JUMP_FORCE 10.0f
+#define JUMP_FORCE 8.0f
 
-#define RUN_FORCE 4.0f
+#define RUN_FORCE 3.0f
 #define ATTACK_TIME 20.0f
 
 class Enemy : public GameObject {
@@ -38,7 +40,7 @@ public:
             e_AttackTime = ATTACK_TIME;
 
             e_Collider = new Collider();
-            e_Collider->SetBuffer(-5, 10, 15, 60);
+            e_Collider->SetBuffer(-5, 0, 10, 0);
 
             e_RigidBody = new RigidBody();
             e_RigidBody->SetGravity(3.0f);

@@ -4,15 +4,20 @@
 #include "CollisionHandler.h"
 #include "Warrior.h"
 #include "GameObject.h"
+#include "Camera.h"
+#include "TileLayer.h"
+#include <cmath>
+
+ShortestPath* ShortestPath::s_Instance = nullptr;
 
 void Enemy::Draw() {
 	e_Animation->Draw(e_Transform->X, e_Transform->Y, e_Width, e_Height, e_Flip);
 
 	/*Vector2D cam = Camera::GetInstance()->GetPosition();
-	SDL_Rect box = m_Collider->Get();
+	SDL_Rect box = e_Collider->Get();
 	box.x -= cam.X;
 	box.y -= cam.Y;
-	SDL_RenderDrawRect(Engine::GetInstance()->GetRenderer(), &box)*/
+	SDL_RenderDrawRect(Engine::GetInstance()->GetRenderer(), &box);*/
 }
 
 void Enemy::Update(float dt) {
@@ -20,55 +25,150 @@ void Enemy::Update(float dt) {
 	e_RigidBody->UnSetForce();
 	Warrior* player = Engine::GetInstance()->GetWarrior();
 	Transform* m_Transform = player->GetPosition();
-	Vector2D direction = m_Transform - e_Transform;
+	SDL_Rect box_Player = player->GetBox();
+	SDL_Rect box_Enemy = e_Collider->Get();
+	e_Flip = player->GetFlip();
+
+	Point e_P, m_P;
+	m_P.X = (m_Transform->X+64)/32;
+	m_P.Y = (m_Transform->Y+75)/32;
+	e_P.X = (e_Transform->X+64)/32;
+	e_P.Y = (e_Transform->Y+64)/32;
 	
-	/*
-	//Run forward
-	if (Input::GetInstance()->GetAxisKey(HORIZONTAL) == FORWARD && !e_IsAttacking) {
-		e_RigidBody->ApplyForceX(FORWARD * RUN_FORCE);
+	//Set Flip
+	if (e_Transform->X < m_Transform->X) {
 		e_Flip = SDL_FLIP_NONE;
-		e_IsRunning = true;
 	}
-
-	//Run backward
-	if (Input::GetInstance()->GetAxisKey(HORIZONTAL) == BACKWARD && !e_IsAttacking) {
-		e_RigidBody->ApplyForceX(BACKWARD * RUN_FORCE);
+	else if (e_Transform->X > m_Transform->X) {
 		e_Flip = SDL_FLIP_HORIZONTAL;
-		e_IsRunning = true;
 	}
-
-	//Attack
-	if (Input::GetInstance()->GetKeyDown(SDL_SCANCODE_J)) {
-		e_RigidBody->UnSetForce();
-		e_IsAttacking = true;
-	}
-
-	//Jump
-	if (Input::GetInstance()->GetKeyDown(SDL_SCANCODE_W) && e_IsGrounded) {
-		e_IsJumping = true;
-		e_IsGrounded = false;
-		e_RigidBody->ApplyForceY(UPWARD * e_JumpForce);
-	}
-
-	if (Input::GetInstance()->GetKeyDown(SDL_SCANCODE_W) && e_IsJumping && e_JumpTime > 0) {
-		e_JumpTime -= dt;
-		e_RigidBody->ApplyForceY(UPWARD * e_JumpForce);
-	}
-	else {
-		e_IsJumping = false;
-		e_JumpTime = JUMP_TIME;
-
-	}
-
-	//Fall
-	if (e_RigidBody->Velocity().Y > 0 && !e_IsGrounded && !e_IsJumping) {
-
-		e_IsFalling = true;
-	}
-
-	else e_IsFalling = false;
+	else e_Flip = player->GetFlip();
 
 	//Attack timer
+	if (CollisionHandler::GetInstance()->CheckCollision(box_Enemy, box_Player)) {
+		e_RigidBody->UnSetForce();
+		e_IsAttacking = true;
+		e_IsRunning = false;
+		e_IsFalling = false;
+	}
+	else {
+		e_IsAttacking = false;
+		std::vector<Point> duongdi = ShortestPath::GetInstance()->cungKhuDat(m_P, e_P);
+		for (int i = 0; i < duongdi.size(); i++) {
+			std::cout << "Buoc " << i << " : " << (duongdi[i].X + 64) / 32 << " " << (duongdi[i].Y + 75) / 32 << std::endl;
+		}
+		//std::cout << ShortestPath::GetInstance()->checkKD(m_P) << " " << ShortestPath::GetInstance()->checkKD(e_P) << std::endl;
+		bool check = ShortestPath::GetInstance()->checkKD(m_P) != ShortestPath::GetInstance()->checkKD(e_P);
+
+		if (!duongdi.empty()) {
+
+			for (int i = 0; i < duongdi.size() - 1; i++) {
+				if (!check && i == duongdi.size()) {
+					e_IsRunning = false;
+					e_IsJumping = false;
+					e_IsFalling = false;
+				}
+
+				if (i == 0) {
+					e_IsJumping = false;
+					e_IsFalling = false;
+					e_IsRunning = true;
+					
+					int check = 0;
+
+					//std::cout << e_IsRunning << " " << e_Transform->X << " " << duongdi[0].X << std::endl;
+					if (abs(e_Transform->X - duongdi[0].X < 3.0f) && check <= 1) {
+						e_IsRunning = false;
+						//e_Transform->X = duongdi[0].X;
+						//e_Transform->Y = duongdi[0].Y;
+						check++;
+					}
+					else if (e_Transform->X < duongdi[0].X) {
+						e_IsRunning = true;
+						e_RigidBody->ApplyForceX(FORWARD * RUN_FORCE);
+					}
+					else if (e_Transform->X > duongdi[0].X) {
+						e_IsRunning = true;
+						e_RigidBody->ApplyForceX(BACKWARD * RUN_FORCE);
+					}
+				}
+				if (duongdi[i + 1].X == duongdi[i].X) {
+					e_IsFalling = false;
+					//e_IsRunning = false;
+					if (duongdi[i + 1].Y < duongdi[i].Y) {
+						e_IsJumping = true;
+						e_IsGrounded = false;
+						e_RigidBody->ApplyForceY(UPWARD * e_JumpForce);
+					}
+					else if (duongdi[i + 1].Y > duongdi[i].Y) {
+						e_IsFalling = true;
+					}
+					else {
+						e_IsJumping = false;
+						e_IsFalling = false;
+					}
+				}
+				else if (duongdi[i + 1].Y == duongdi[i].Y) {
+					e_IsJumping = false;
+					e_IsFalling = false;
+					e_IsRunning = true;
+					if (duongdi[i + 1].X < duongdi[i].X) {
+						e_RigidBody->ApplyForceX(BACKWARD * RUN_FORCE);
+					}
+					else if (duongdi[i + 1].X > duongdi[i].X) {
+						e_RigidBody->ApplyForceX(FORWARD * RUN_FORCE);
+					}
+					else {
+						e_IsRunning = false;
+					}
+				}
+			}
+		}
+		if (!check) {
+			//X
+			e_RigidBody->Update(dt);
+			if (abs(e_Transform->X - m_Transform->X) < 3.0f) {
+				e_IsRunning = false;
+			}
+
+			else if (e_Transform->X < m_Transform->X) {
+				e_IsRunning = true;
+				e_RigidBody->ApplyForceX(FORWARD * RUN_FORCE);
+			}
+			else if (e_Transform->X > m_Transform->X) {
+				e_IsRunning = true;
+				e_RigidBody->ApplyForceX(BACKWARD * RUN_FORCE);
+			}
+
+			//Y 
+			e_RigidBody->Update(dt);
+			if (abs(e_Transform->Y - m_Transform->Y) < 3.0f) {
+				e_IsJumping = false;
+				e_IsFalling = false;
+				e_IsRunning = true;
+			}
+
+			else if (e_Transform->Y < m_Transform->Y) {
+				e_IsRunning = false;
+				e_IsFalling = true;
+			}
+			else if (e_Transform->X > m_Transform->X) {
+				e_IsJumping = true;
+				e_IsGrounded = false;
+				e_IsRunning = false;
+				e_RigidBody->ApplyForceY(UPWARD * e_JumpForce);
+			}
+		}
+	}
+	if (e_IsJumping && !e_IsGrounded) {
+		if (CollisionHandler::GetInstance()->MapCollision(e_Collider->Get())) {
+			e_IsJumping = false;
+			e_IsRunning = false;
+			e_IsFalling = true;
+			e_Transform->Y += 3;
+		}
+	}
+
 	if (e_IsAttacking && e_AttackTime > 0) {
 		e_AttackTime -= dt;
 	}
@@ -77,6 +177,13 @@ void Enemy::Update(float dt) {
 		e_AttackTime = ATTACK_TIME;
 	}
 
+
+	//Fall
+	if (e_RigidBody->Velocity().Y > 0 && !e_IsGrounded && !e_IsJumping) {
+		e_IsFalling = true;
+	}
+
+	else e_IsFalling = false;
 
 	//move on x 
 	e_RigidBody->Update(dt);
@@ -87,7 +194,6 @@ void Enemy::Update(float dt) {
 	if (CollisionHandler::GetInstance()->MapCollision(e_Collider->Get()))
 	{
 		e_Transform->X = e_LastSafePosition.X;
-
 	}
 
 	// move y
@@ -96,7 +202,7 @@ void Enemy::Update(float dt) {
 	e_Transform->Y += e_RigidBody->Position().Y;
 	e_Collider->Set(e_Transform->X, e_Transform->Y, 60, 75);
 
-	if (CollisionHandler::GetInstance()->MapCollision(e_Collider->Get()))
+	if (CollisionHandler::GetInstance()->MapCollision(e_Collider->Get()) && !e_IsJumping)
 	{
 		e_Transform->Y = e_LastSafePosition.Y;
 		e_IsGrounded = true;
@@ -105,9 +211,17 @@ void Enemy::Update(float dt) {
 		e_IsGrounded = false;
 	}
 
+	//Check vuot ra khoi map
+	if (e_Transform->X < 0 || e_Transform->X + e_Width > 1920) {
+		e_Transform->X = e_LastSafePosition.X;
+	}
+	if (e_Transform->Y < 0 || e_Transform->Y + e_Height > 640) {
+		e_Transform->Y = e_LastSafePosition.Y;
+	}
 	e_AnimationState();
 	e_Animation->Update();
-	*/
+
+	//std::cout << e_IsRunning << " " << e_IsAttacking << " " << e_IsFalling << " " << e_IsJumping << " " << e_IsGrounded << std::endl;
 }
 
 void Enemy::e_AnimationState() {
@@ -121,7 +235,6 @@ void Enemy::e_AnimationState() {
 
 	//Jump
 	if (e_IsJumping) {
-		e_Transform->Y -= 25;
 		e_Animation->SetProps("enemy_jump", 0, 1, 100);
 	}
 
@@ -132,8 +245,9 @@ void Enemy::e_AnimationState() {
 
 	//attack
 	if (e_IsAttacking) {
-		e_Animation->SetProps("enemy_skill", 0, 11, 100);
+		e_Animation->SetProps("enemy_skill", 0, 7, 50);
 	}
+
 }
 
 void Enemy::Clean() {

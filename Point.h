@@ -41,6 +41,11 @@ class Point
 			return Point(X * scalar, Y * scalar);
 		}
 
+		//KC
+		static float KC(const Point a, const Point b) {
+			return sqrt((a.X - b.X) * (a.X - b.X) + (a.Y - b.Y) * (a.Y - b.Y));
+		}
+
 		void Log(std::string msg = "") {
 			std::cout << msg << " (X Y) = (" << X << " " << Y << ")" << std::endl;
 		}

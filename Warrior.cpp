@@ -11,13 +11,13 @@ void Warrior::Draw() {
 
 	/*Vector2D cam = Camera::GetInstance()->GetPosition();
 	SDL_Rect box = m_Collider->Get();
+	//m_Collider->Set(m_Transform->X, m_Transform->Y, 60, 75);
 	box.x -= cam.X;
 	box.y -= cam.Y;
 	SDL_RenderDrawRect(Engine::GetInstance()->GetRenderer(), &box);*/
 }
 
 void Warrior::Update(float dt) {
-	
 	m_IsRunning = false;
 	m_RigidBody->UnSetForce();
 	
@@ -26,8 +26,6 @@ void Warrior::Update(float dt) {
 		m_RigidBody->ApplyForceX(FORWARD * RUN_FORCE);
 		m_Flip = SDL_FLIP_NONE;
 		m_IsRunning = true;
-
-		//std::cout << m_Transform->X << " " << m_Transform->Y << std::endl;
 	}
 
 	//Run backward
@@ -44,22 +42,32 @@ void Warrior::Update(float dt) {
 	}
 
 	//Jump
-	if (Input::GetInstance()->GetKeyDown(SDL_SCANCODE_W) && m_IsGrounded) {
+	if ((Input::GetInstance()->GetKeyDown(SDL_SCANCODE_W) 
+		|| Input::GetInstance()->GetKeyDown(SDL_SCANCODE_UP)) 
+		&& m_IsGrounded) {
 		m_IsJumping = true;
 		m_IsGrounded = false;
 		m_RigidBody->ApplyForceY(UPWARD * m_JumpForce);
 	}
-
-	if (Input::GetInstance()->GetKeyDown(SDL_SCANCODE_W) && m_IsJumping && m_JumpTime > 0) {
-		m_JumpTime -= dt;
+	if ((Input::GetInstance()->GetKeyDown(SDL_SCANCODE_W)
+		|| Input::GetInstance()->GetKeyDown(SDL_SCANCODE_UP))) {
+		m_IsJumping = true;
 		m_RigidBody->ApplyForceY(UPWARD * m_JumpForce);
 	}
 	else {
 		m_IsJumping = false;
-		m_JumpTime = JUMP_TIME;
-
 	}
 	
+	if ((Input::GetInstance()->GetKeyDown(SDL_SCANCODE_W) || Input::GetInstance()->GetKeyDown(SDL_SCANCODE_UP)) && m_IsJumping && !m_IsGrounded) {
+		if (CollisionHandler::GetInstance()->MapCollision(m_Collider->Get())) {
+			m_IsJumping = false;
+			m_IsFalling = true;
+			m_Transform->Y += 3;
+		}
+	}
+
+	
+
 	//Fall
 	if (m_RigidBody->Velocity().Y > 0 && !m_IsGrounded && !m_IsJumping) {
 	
@@ -67,6 +75,10 @@ void Warrior::Update(float dt) {
 	}
 		
 	else m_IsFalling = false;
+
+	if (Input::GetInstance()->GetKeyDown(SDL_SCANCODE_S) && !CollisionHandler::GetInstance()->MapCollision(m_Collider->Get())) {
+		m_IsFalling = true;
+	}
 
 	//Attack timer
 	if (m_IsAttacking && m_AttackTime > 0) {
@@ -78,6 +90,7 @@ void Warrior::Update(float dt) {
 	}
 
 
+
 	//move on x 
 	m_RigidBody->Update(dt);
 	m_LastSafePosition.X = m_Transform->X;
@@ -87,7 +100,6 @@ void Warrior::Update(float dt) {
 	if (CollisionHandler::GetInstance()->MapCollision(m_Collider->Get()))
 	{
 		m_Transform->X = m_LastSafePosition.X;
-		
 	}
 
 	// move y
@@ -96,7 +108,7 @@ void Warrior::Update(float dt) {
 	m_Transform->Y += m_RigidBody->Position().Y;
 	m_Collider->Set(m_Transform->X, m_Transform->Y, 60, 75);
 
-	if (CollisionHandler::GetInstance()->MapCollision(m_Collider->Get()))
+	if (CollisionHandler::GetInstance()->MapCollision(m_Collider->Get()) && !m_IsJumping)
 	{
 		m_Transform->Y = m_LastSafePosition.Y;
 		m_IsGrounded = true;
@@ -105,12 +117,21 @@ void Warrior::Update(float dt) {
 		m_IsGrounded = false;
 	}
 
+	//Check vuot ra khoi map
+	if (m_Transform->X < 0 || m_Transform->X + m_Width > 1920) {
+		m_Transform->X = m_LastSafePosition.X;
+	}
+	if (m_Transform->Y < 0 || m_Transform->Y + m_Height > 640) {
+		m_Transform->Y = m_LastSafePosition.Y;
+	}
 
 	m_Origin->X = m_Transform->X + m_Width / 2;
 	m_Origin->Y = m_Transform->Y + m_Height / 2;
 
 	AnimationState();
 	m_Animation->Update();
+	//m_Transform->X = 22*32-64;
+	//m_Transform->Y = 4*32-75;
 }
 
 void Warrior::AnimationState() {
@@ -124,8 +145,7 @@ void Warrior::AnimationState() {
 
 	//Jump
 	if (m_IsJumping) {
-		m_Transform->Y -= 20;
-			m_Animation->SetProps("player_jump", 0, 1, 100);
+		m_Animation->SetProps("player_jump", 0, 1, 100);
 	}
 
 	//fall
@@ -135,10 +155,11 @@ void Warrior::AnimationState() {
 
 	//attack
 	if (m_IsAttacking) {
-		m_Animation->SetProps("player_skill1", 0, 11, 100);
+		m_Animation->SetProps("player_skill1", 0, 11, 50);
 	}
+
 }
 
 void Warrior::Clean() {
-	TextureManager::GetInstance()->Drop("player_right");
+	TextureManager::GetInstance()->Drop("player");
 }

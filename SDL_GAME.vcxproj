@@ -34,6 +34,7 @@
     <ClInclude Include="MapParser.h" />
     <ClInclude Include="Point.h" />
     <ClInclude Include="RigidBody.h" />
+    <ClInclude Include="ShortestPath.h" />
     <ClInclude Include="TextureManager.h" />
     <ClInclude Include="TileLayer.h" />
     <ClInclude Include="Timer.h" />
@@ -52,7 +53,6 @@
     <ClCompile Include="GameMap.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="Input.cpp" />
-    <ClCompile Include="IObject.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MapParser.cpp" />
     <ClCompile Include="RigidBody.cpp" />

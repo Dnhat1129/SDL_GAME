@@ -15,22 +15,19 @@ bool CollisionHandler::CheckCollision(SDL_Rect a, SDL_Rect b) {
 	return (x_overlaps && y_overlaps);
 }
 
-bool CollisionHandler::MapCollision(SDL_Rect a) {
-    int tileSize = 32;
-    int RowCount = 20;
-    int ColCount = 60;
+bool CollisionHandler::MapCollision(SDL_Rect a, int tileSize, int RowCount, int ColCount) {
 
-    int left_tile = std::round(static_cast<float>(a.x) / tileSize);
-    int right_tile = std::round(static_cast<float>(a.x + a.w) / tileSize);
+    int left_tile = static_cast<int> (std::round(static_cast<float>(a.x / tileSize)));
+    int right_tile = static_cast<int> (std::round(static_cast<float>((a.x + a.w) / tileSize)));
 
-    int top_tile = std::round(static_cast<float>(a.y) / tileSize);
-    int bottom_tile = std::round(static_cast<float>(a.y + a.h) / tileSize);
+    int top_tile = static_cast<int> (std::round(static_cast<float>(a.y / tileSize)));
+    int bottom_tile = static_cast<int> (std::round(static_cast<float>((a.y + a.h) / tileSize)));
 
-    if (left_tile < 0) left_tile = 0;
-    if (right_tile > ColCount) right_tile = ColCount;
+    if (left_tile <= 0) left_tile = 0;
+    if (right_tile >= ColCount) right_tile = ColCount;
 
-    if (top_tile < 0) top_tile = 0;
-    if (bottom_tile > RowCount) bottom_tile = RowCount;
+    if (top_tile <= 0) top_tile = 0;
+    if (bottom_tile >= RowCount) bottom_tile = RowCount;
 
     for (int i = left_tile; i <= right_tile; ++i) {
         for (int j = top_tile; j <= bottom_tile; ++j) {
