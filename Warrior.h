@@ -6,6 +6,7 @@
 #include "Collider.h"
 #include "Vector2D.h"
 #include "GameObject.h"
+#include <vector>
 
 #define JUMP_TIME 15.0f
 #define JUMP_FORCE 10.0f
@@ -14,6 +15,7 @@
 #define ATTACK_TIME 20.0f
 
 class Warrior : public GameObject {
+    
     public:
         Warrior(Properties* props) : GameObject(props) {
             m_TextureID = props->TextureID;
@@ -28,10 +30,13 @@ class Warrior : public GameObject {
             m_IsFalling = false;
             m_IsGrounded = false;
             m_IsAttacking = false;
+            m_IsDie = false;
 
             m_Flip = SDL_FLIP_NONE;
             m_JumpForce = JUMP_FORCE;
+            m_HP = 1000;
             m_AttackTime = ATTACK_TIME;
+            time_sjjkhi = 0;
 
             m_Collider = new Collider();
             //m_Collider->SetBuffer(-20, -10, 30, 42);
@@ -46,9 +51,11 @@ class Warrior : public GameObject {
         virtual void Draw();
         virtual void Clean();
         virtual void Update(float dt);
+        void Load();
         Transform* GetPosition() { return m_Transform; }
         SDL_Rect GetBox() { return m_Collider->Get(); }
         SDL_RendererFlip GetFlip() { return m_Flip; }
+        float GetHP() { return m_HP; }
 
     private: 
         void AnimationState();
@@ -59,15 +66,28 @@ class Warrior : public GameObject {
         bool m_IsGrounded;
         bool m_IsAttacking;
 
+
         float m_JumpForce;
         float m_AttackTime;
-
+        
+        
         Collider* m_Collider;
 
         Animation* m_Animation;
         RigidBody* m_RigidBody;
+        
 
         Vector2D m_LastSafePosition;
+    private:
+        bool m_IsDie;
+        int m_HP;
+        int m_MN;
+        float m_Time;
+
+        bool ssj, khi;
+        Animation* ssj_Animation = new Animation();
+        float time_sjjkhi;
+        std::vector<Warrior> CharacterList;
 
     protected:
         Transform* m_Transform;

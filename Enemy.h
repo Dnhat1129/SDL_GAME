@@ -10,12 +10,7 @@
 #include "Engine.h"
 #include "TileLayer.h"
 #include "ShortestPath.h"
-
-#define JUMP_TIME 15.0f
-#define JUMP_FORCE 8.0f
-
-#define RUN_FORCE 3.0f
-#define ATTACK_TIME 20.0f
+#include "Warrior.h"
 
 class Enemy : public GameObject {
 public:
@@ -52,8 +47,10 @@ public:
     virtual void Draw();
     virtual void Clean();
     virtual void Update(float dt);
+    void Load();
+    SDL_Rect GetBox() { return e_Collider->Get(); }
     std::vector <Enemy> EnemyList;
-    
+    bool CheckAttack() { return e_IsAttacking; }
 
 private: Transform* e_Transform;
        int e_Width, e_Height;
@@ -80,6 +77,7 @@ private:
     RigidBody* e_RigidBody;
 
     Vector2D e_LastSafePosition;
+    float e_time;
 };
 
 #endif

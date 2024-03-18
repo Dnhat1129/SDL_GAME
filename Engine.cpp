@@ -1,12 +1,12 @@
 #include "Engine.h"
 #include "TextureManager.h"
-#include "Warrior.h"
 #include "Input.h"
 #include "Animation.h"
 #include "Timer.h"
 #include "MapParser.h"
 #include <iostream>
 #include "Camera.h"
+#include "Warrior.h"
 #include "Enemy.h"
 
 Engine* Engine::s_Instance = nullptr;
@@ -41,20 +41,9 @@ bool Engine::Init()
 
     m_LevelMap = MapParser::GetInstance()->GetMap("MAP");
 
-    TextureManager::GetInstance()->Load("player", "LamGame/Picture/dungim_right.png");
+    player->Load();
 
-    TextureManager::GetInstance()->Load("player_run", "LamGame/Picture/run_right.png");
-    TextureManager::GetInstance()->Load("player_skill1", "LamGame/Picture/skill1_right.png");
-    TextureManager::GetInstance()->Load("player_jump", "LamGame/Picture/fly + jump/nhay.png");
-    TextureManager::GetInstance()->Load("player_fall", "LamGame/Picture/fly + jump/roi_xuong.png");
-    TextureManager::GetInstance()->Load("player_bay", "LamGame/Picture/fly + jump/bay.png");
-
-    TextureManager::GetInstance()->Load("enemy", "LamGame/Picture/enemy/so3.png");
-    TextureManager::GetInstance()->Load("enemy_jump", "LamGame/Picture/enemy/so3_nhay.png");
-    TextureManager::GetInstance()->Load("enemy_fall", "LamGame/Picture/enemy/so3_roi.png");
-    TextureManager::GetInstance()->Load("enemy_run", "LamGame/Picture/enemy/so3_run.png");
-    TextureManager::GetInstance()->Load("enemy_skill", "LamGame/Picture/enemy/so3_skill.png");
-    
+    enemy->Load();
 
     TextureManager::GetInstance()->Load("bg", "LamGame/Picture/Bg/background0.png");
 
@@ -73,10 +62,26 @@ void Engine::Render()
     SDL_SetRenderDrawColor(m_Renderer, 124, 218, 254, 255);
     SDL_RenderClear(m_Renderer);
     TextureManager::GetInstance()->Draw("bg", 0, 0, 1920, 1080);
-
     m_LevelMap->Render();
     player->Draw();
     enemy->Draw();
+
+
+    Point* m_Origin = player->GetOrigin();
+    Transform* m_Transform = player->GetPosition();
+
+
+    float vitri_khung = 0;
+    if (m_Origin->X < 471) vitri_khung = 0;
+    else if (m_Origin->X > 471 && m_Origin->X <= 1440) {
+        vitri_khung = m_Transform->X - 480 + 30;
+    }
+    else vitri_khung = 1440 - 480;
+    int hp = player->GetHP();
+    TextureManager::GetInstance()->Draw("HPMN", static_cast<int>(vitri_khung), 0, 350, 100);
+    int vitri_hp = 1.0 * hp / 1000 * 150; if (vitri_hp > 150) vitri_hp = 150;
+    TextureManager::GetInstance()->Draw("HP", static_cast<int>(vitri_khung) + 186, 12, vitri_hp, 25);
+    TextureManager::GetInstance()->Draw("MN", static_cast<int>(vitri_khung) + 186, 47, 137, 12);
 
 
     SDL_RenderPresent(m_Renderer);

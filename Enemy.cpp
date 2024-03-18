@@ -55,15 +55,15 @@ void Enemy::Update(float dt) {
 		e_IsAttacking = false;
 		std::vector<Point> duongdi = ShortestPath::GetInstance()->cungKhuDat(m_P, e_P);
 		for (int i = 0; i < duongdi.size(); i++) {
-			std::cout << "Buoc " << i << " : " << (duongdi[i].X + 64) / 32 << " " << (duongdi[i].Y + 75) / 32 << std::endl;
+			//std::cout << "Buoc " << i << " : " << (duongdi[i].X + 64) / 32 << " " << (duongdi[i].Y + 75) / 32 << std::endl;
 		}
 		//std::cout << ShortestPath::GetInstance()->checkKD(m_P) << " " << ShortestPath::GetInstance()->checkKD(e_P) << std::endl;
 		bool check = ShortestPath::GetInstance()->checkKD(m_P) != ShortestPath::GetInstance()->checkKD(e_P);
 
-		if (!duongdi.empty()) {
+		if (!duongdi.empty() && check) {
 
 			for (int i = 0; i < duongdi.size() - 1; i++) {
-				if (!check && i == duongdi.size()) {
+				if (i == duongdi.size()) {
 					e_IsRunning = false;
 					e_IsJumping = false;
 					e_IsFalling = false;
@@ -74,14 +74,10 @@ void Enemy::Update(float dt) {
 					e_IsFalling = false;
 					e_IsRunning = true;
 					
-					int check = 0;
 
 					//std::cout << e_IsRunning << " " << e_Transform->X << " " << duongdi[0].X << std::endl;
-					if (abs(e_Transform->X - duongdi[0].X < 3.0f) && check <= 1) {
+					if (abs(e_Transform->X - duongdi[0].X < 3.0f) && check != 1) {
 						e_IsRunning = false;
-						//e_Transform->X = duongdi[0].X;
-						//e_Transform->Y = duongdi[0].Y;
-						check++;
 					}
 					else if (e_Transform->X < duongdi[0].X) {
 						e_IsRunning = true;
@@ -90,6 +86,9 @@ void Enemy::Update(float dt) {
 					else if (e_Transform->X > duongdi[0].X) {
 						e_IsRunning = true;
 						e_RigidBody->ApplyForceX(BACKWARD * RUN_FORCE);
+					}
+					if (abs(e_Transform->X - duongdi[0].X < 3.0f)) {
+						e_IsRunning = false;
 					}
 				}
 				if (duongdi[i + 1].X == duongdi[i].X) {
@@ -124,7 +123,7 @@ void Enemy::Update(float dt) {
 				}
 			}
 		}
-		if (!check) {
+		else if (!check) {
 			//X
 			e_RigidBody->Update(dt);
 			if (abs(e_Transform->X - m_Transform->X) < 3.0f) {
@@ -189,7 +188,7 @@ void Enemy::Update(float dt) {
 	e_RigidBody->Update(dt);
 	e_LastSafePosition.X = e_Transform->X;
 	e_Transform->X += e_RigidBody->Position().X;
-	e_Collider->Set(e_Transform->X, e_Transform->Y, 60, 75);
+	e_Collider->Set(static_cast<int>(e_Transform->X), static_cast<int>(e_Transform->Y), 60, 75);
 
 	if (CollisionHandler::GetInstance()->MapCollision(e_Collider->Get()))
 	{
@@ -200,7 +199,7 @@ void Enemy::Update(float dt) {
 	e_RigidBody->Update(dt);
 	e_LastSafePosition.Y = e_Transform->Y;
 	e_Transform->Y += e_RigidBody->Position().Y;
-	e_Collider->Set(e_Transform->X, e_Transform->Y, 60, 75);
+	e_Collider->Set(static_cast<int>(e_Transform->X), static_cast<int>(e_Transform->Y), 60, 75);
 
 	if (CollisionHandler::GetInstance()->MapCollision(e_Collider->Get()) && !e_IsJumping)
 	{
@@ -220,6 +219,13 @@ void Enemy::Update(float dt) {
 	}
 	e_AnimationState();
 	e_Animation->Update();
+
+	e_time += dt;
+	if (e_time > 500.0f) {
+		e_Transform->X = m_Transform->X;
+		e_Transform->Y = m_Transform->Y;
+		e_time = 0.0f;
+	}
 
 	//std::cout << e_IsRunning << " " << e_IsAttacking << " " << e_IsFalling << " " << e_IsJumping << " " << e_IsGrounded << std::endl;
 }
@@ -252,4 +258,13 @@ void Enemy::e_AnimationState() {
 
 void Enemy::Clean() {
 	TextureManager::GetInstance()->Drop("enemy");
+}
+
+void Enemy::Load() {
+
+	TextureManager::GetInstance()->Load("enemy", "LamGame/Picture/enemy/so3.png");
+	TextureManager::GetInstance()->Load("enemy_jump", "LamGame/Picture/enemy/so3_nhay.png");
+	TextureManager::GetInstance()->Load("enemy_fall", "LamGame/Picture/enemy/so3_roi.png");
+	TextureManager::GetInstance()->Load("enemy_run", "LamGame/Picture/enemy/so3_run.png");
+	TextureManager::GetInstance()->Load("enemy_skill", "LamGame/Picture/enemy/so3_skill.png");
 }

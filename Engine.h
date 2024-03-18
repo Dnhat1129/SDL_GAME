@@ -8,43 +8,48 @@
 #include <SDL_mixer.h>
 #include <SDL_ttf.h>
 #include "GameMap.h"
-#include "Warrior.h"
+
+class Warrior; // Forward declaration
+class Enemy;   // Forward declaration
+
 
 /// Screen
-const int SCREEN_WIDTH  = 960;
+const int SCREEN_WIDTH = 960;
 const int SCREEN_HEIGHT = 640;
-
 
 class Engine {
 public:
-	Engine() {};
-	static Engine* GetInstance() {
-		if (s_Instance != nullptr)
-			return s_Instance;
-		else
-			return s_Instance = new Engine();
-	}
-	bool Init();
-	bool Clean();
-	void Quit();
+    Engine() {};
+    static Engine* GetInstance() {
+        if (s_Instance != nullptr)
+            return s_Instance;
+        else
+            return s_Instance = new Engine();
+    }
+    
+    bool Init();
+    bool Clean();
+    void Quit();
 
-	void Update();
-	void Render();
-	void Events();
+    void Update();
+    void Render();
+    void Events();
 
-	inline GameMap* GetMap() { return m_LevelMap; }
-	inline bool IsRunning() { return m_IsRunning; }
-	inline SDL_Renderer* GetRenderer() { return m_Renderer; }
-	Warrior* GetWarrior() { return player; }
+    inline GameMap* GetMap() { return m_LevelMap; }
+    inline bool IsRunning() { return m_IsRunning; }
+    inline SDL_Renderer* GetRenderer() { return m_Renderer; }
+    
+    Warrior* GetWarrior() { return player; }
+    Enemy* GetEnemy() { return enemy; }
 private:
-	bool m_IsRunning;
+    bool m_IsRunning = true;
 
-	GameMap* m_LevelMap;
-	SDL_Window* m_Window;
-	SDL_Renderer* m_Renderer;
-	static Engine* s_Instance;
-	Warrior* player;
+    GameMap* m_LevelMap;
+    SDL_Window* m_Window;
+    SDL_Renderer* m_Renderer;
+    static Engine* s_Instance;
+    Warrior* player;
+    Enemy* enemy;
 };
 
-
-#endif
+#endif // ENGINE_H
