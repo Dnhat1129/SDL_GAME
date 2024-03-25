@@ -1,5 +1,6 @@
 #include "Animation.h"
 #include "TextureManager.h"
+#include <iostream>
 
 void Animation::Update() {
 	m_CurrentFrame = (SDL_GetTicks() / m_Speed) % m_FrameCount;
@@ -13,4 +14,8 @@ void Animation::SetProps(std::string textureID, int spriteRow, int frameCount, i
 	m_SpriteRow = spriteRow;
 	m_FrameCount = frameCount;
 	m_Speed = speed;
+}
+
+void Animation::Reset() {
+	m_CurrentFrame = 0;
 }

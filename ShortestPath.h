@@ -20,8 +20,8 @@ class ShortestPath {
         }
 
         int checkKD(Point a) {
-            if (a.X >= 0 && a.X <= 60 && a.Y <= 5) return 1;
-            if (a.X >= 0 && a.X <= 60 && a.Y <= 12 && a.Y >= 6) return 2;
+            if (a.X >= 0 && a.X <= 60 && a.Y < 6) return 1;
+            if (a.X >= 0 && a.X <= 60 && a.Y <= 11 && a.Y >= 6) return 2;
             //if (a.X >= 19 && a.X <= 30 && a.Y <= 4) return 1;
             //if (a.X >= 10 && a.X <= 39  && a.Y <= 11 && a.Y >= 6) return 2;
             //if (a.X >= 0 && a.X <= 60 && a.Y >= 12 && a.Y <= 20 ) return 3;

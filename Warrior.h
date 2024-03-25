@@ -30,16 +30,18 @@ class Warrior : public GameObject {
             m_IsFalling = false;
             m_IsGrounded = false;
             m_IsAttacking = false;
+            m_IsKame = false;
             m_IsDie = false;
+            ssj = true;
 
             m_Flip = SDL_FLIP_NONE;
             m_JumpForce = JUMP_FORCE;
             m_HP = 1000;
-            m_AttackTime = ATTACK_TIME;
+            m_dame = 10;
             time_sjjkhi = 0;
+            time_kame = 0;
 
             m_Collider = new Collider();
-            //m_Collider->SetBuffer(-20, -10, 30, 42);
             m_Collider->SetBuffer(-10, 0, 15, 0);
 
             m_RigidBody = new RigidBody();
@@ -47,15 +49,22 @@ class Warrior : public GameObject {
 
             m_Animation = new Animation();
             m_Animation->SetProps("player_right", 0, 3, 100);
+
+            ssj_Animation = new Animation();
+            player_kame = new Animation();
         }
         virtual void Draw();
         virtual void Clean();
         virtual void Update(float dt);
         void Load();
+
+        bool CheckAttack() { return m_IsAttacking; }
         Transform* GetPosition() { return m_Transform; }
         SDL_Rect GetBox() { return m_Collider->Get(); }
         SDL_RendererFlip GetFlip() { return m_Flip; }
-        float GetHP() { return m_HP; }
+        int GetHP() { return m_HP; }
+        int GetDame() { return m_dame; }
+        Animation* GetKameAnimation() { return player_kame; }
 
     private: 
         void AnimationState();
@@ -68,7 +77,6 @@ class Warrior : public GameObject {
 
 
         float m_JumpForce;
-        float m_AttackTime;
         
         
         Collider* m_Collider;
@@ -82,11 +90,18 @@ class Warrior : public GameObject {
         bool m_IsDie;
         int m_HP;
         int m_MN;
+        int m_dame;
         float m_Time;
 
         bool ssj, khi;
-        Animation* ssj_Animation = new Animation();
+
+        bool m_IsKame;
+        Animation* ssj_Animation;
         float time_sjjkhi;
+        Animation* player_kame;
+        float time_kame;
+
+
         std::vector<Warrior> CharacterList;
 
     protected:

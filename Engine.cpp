@@ -41,6 +41,9 @@ bool Engine::Init()
 
     m_LevelMap = MapParser::GetInstance()->GetMap("MAP");
 
+    player = new Warrior(new Properties("player", 100, 100, 60, 75));
+    enemy = new Enemy(new Properties("enemy", 1184, 437, 60, 75));
+
     player->Load();
 
     enemy->Load();
@@ -48,9 +51,7 @@ bool Engine::Init()
     TextureManager::GetInstance()->Load("bg", "LamGame/Picture/Bg/background0.png");
 
 
-    player = new Warrior(new Properties("player",100,100, 60, 75));
- 
-    enemy = new Enemy(new Properties("enemy", 200, 100, 60, 75));
+    
     
     Camera::GetInstance()->SetTarget(player->GetOrigin());
 
@@ -63,33 +64,19 @@ void Engine::Render()
     SDL_RenderClear(m_Renderer);
     TextureManager::GetInstance()->Draw("bg", 0, 0, 1920, 1080);
     m_LevelMap->Render();
-    player->Draw();
     enemy->Draw();
-
-
-    Point* m_Origin = player->GetOrigin();
-    Transform* m_Transform = player->GetPosition();
-
-
-    float vitri_khung = 0;
-    if (m_Origin->X < 471) vitri_khung = 0;
-    else if (m_Origin->X > 471 && m_Origin->X <= 1440) {
-        vitri_khung = m_Transform->X - 480 + 30;
-    }
-    else vitri_khung = 1440 - 480;
-    int hp = player->GetHP();
-    TextureManager::GetInstance()->Draw("HPMN", static_cast<int>(vitri_khung), 0, 350, 100);
-    int vitri_hp = 1.0 * hp / 1000 * 150; if (vitri_hp > 150) vitri_hp = 150;
-    TextureManager::GetInstance()->Draw("HP", static_cast<int>(vitri_khung) + 186, 12, vitri_hp, 25);
-    TextureManager::GetInstance()->Draw("MN", static_cast<int>(vitri_khung) + 186, 47, 137, 12);
-
+    player->Draw();
+    
+    
 
     SDL_RenderPresent(m_Renderer);
 }
 
 void Engine::Update()
 {   
-    
+    if (enemy->GetIsDie()) {
+        enemy->Load();
+    }
     float dt = Timer::GetInstance()->GetDeltaTime();
     m_LevelMap->Update();
     player->Update(dt);
