@@ -19,7 +19,7 @@ class CollisionHandler
 			else
 				return s_Instance = new CollisionHandler();
 		}
-		
+		void Update();
 	private:
 		CollisionHandler();
 		TileMap m_CollisionTilemap;

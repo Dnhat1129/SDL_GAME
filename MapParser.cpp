@@ -1,12 +1,22 @@
 #include "MapParser.h"
+#include "Engine.h"
+#include "Menustage.h"
+#include <iostream>
 
 MapParser* MapParser::s_Instance = nullptr;
 
-bool MapParser::Load() {
-	if (!Parse("MAP", "LamGame/Picture/maps/map4.tmx")) {
-		return false;
+void MapParser::Load() {
+	if (Engine::GetInstance()->GetMenu()->GetStory()) {
+		if (Engine::GetInstance()->GetMap1()) loadmap = ListMap[0];
+		else if (Engine::GetInstance()->GetMap2()) loadmap = ListMap[1];
+
 	}
-	return true;
+	if (Engine::GetInstance()->GetMenu()->GetPK()) {
+		loadmap = ListMap[2];
+	}
+	if (!Parse("MAP", "LamGame/Picture/maps/" + loadmap)) {
+		std::cout << "Failed to load" << std::endl;
+	}
 }
 
 

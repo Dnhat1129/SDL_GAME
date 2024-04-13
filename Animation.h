@@ -3,6 +3,8 @@
 
 #include "SDL.h"
 #include <string>
+#include "Engine.h"
+
 
 class Animation
 {
@@ -12,8 +14,9 @@ class Animation
 		void Update();
 		void Draw(float x, float y, int spriteWidth, int spriteHeight, SDL_RendererFlip flip = SDL_FLIP_NONE);
 		void SetProps(std::string textureID, int spriteRow, int frameCount, int speed);
-		int GetCurrentFrame() { return m_CurrentFrame; }
 		void Reset();
+		int GetCurrentFrame() { return m_CurrentFrame; }
+		void DrawKame(float x, float y, int spriteWidth, int spriteHeight, int currentframe, SDL_RendererFlip flip = SDL_FLIP_NONE);
 		
 	private:
 		int m_Speed;
@@ -25,5 +28,3 @@ class Animation
 };
 
 #endif
-
-

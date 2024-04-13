@@ -6,10 +6,11 @@
 #include "GameMap.h"
 #include "TileLayer.h"
 #include "tinyxml.h"
+#include <vector>
 
 class MapParser {
-	public: 
-		bool Load();
+	public:
+		void Load();
 		void Clean();
 
 		inline GameMap* GetMap(std::string id) { return m_MapDict[id]; };
@@ -26,9 +27,17 @@ class MapParser {
 		TileLayer* ParseTileLayer(TiXmlElement* xmlLayer, TilesetList tilesets, int tilesize, int rowcount, int colcount);
 
 	private:
-		MapParser() {};
+		MapParser() {
+			ListMap.push_back("map1.tmx");
+			ListMap.push_back("map2.tmx");
+			ListMap.push_back("map3.tmx");
+			Completemap1 = false;
+		};
 		static MapParser* s_Instance;
 		std::map<std::string, GameMap*> m_MapDict;
+		std::vector<std::string> ListMap;
+		bool Completemap1;
+		std::string loadmap;
 };
 
 #endif // !1

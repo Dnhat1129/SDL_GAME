@@ -1,6 +1,7 @@
 // Input.cpp
 #include "Input.h"
 #include "Engine.h"
+#include "Menustage.h"
 
 Input* Input::s_Instance = nullptr;
 
@@ -12,9 +13,16 @@ void Input::Listen() {
 
     while (SDL_PollEvent(&event)) {
         switch (event.type) {
-        case SDL_QUIT: Engine::GetInstance()->Quit(); break;
-        case SDL_KEYDOWN: KeyDown(); break;
-        case SDL_KEYUP: KeyUp(); break;
+            case SDL_QUIT: Engine::GetInstance()->Quit(); break;
+            case SDL_KEYDOWN: KeyDown(); break;
+            case SDL_KEYUP: KeyUp(); break;
+        
+            case SDL_MOUSEBUTTONDOWN:
+                luu.type = SDL_MOUSEBUTTONDOWN;
+                break;
+            default: 
+                luu.type = SDL_FIRSTEVENT;
+                break;
         }
     }
 }
@@ -53,4 +61,17 @@ int Input::GetAxisKey(Axis axis) {
         default: 
             return 0;
     }
+}
+
+bool Input::ListenMouse(SDL_Rect check) {
+        if (luu.type == SDL_MOUSEBUTTONDOWN) {
+            int mouseX, mouseY;
+            SDL_GetMouseState(&mouseX, &mouseY);
+            std::cout << mouseX << " " << mouseY << std::endl;
+            if (mouseX >= check.x && mouseX <= check.x + check.w &&
+                mouseY >= check.y && mouseY <= check.y + check.h) {
+                return true;
+            }
+        }
+    return false;
 }

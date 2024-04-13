@@ -17,6 +17,9 @@ public:
     }
     void Listen();
     bool GetKeyDown(SDL_Scancode key);
+    bool ListenMouse(SDL_Rect check);
+    //int Getnut() const { return nut; }
+    //int Getnut2() const { return nut2; }
 
     int GetAxisKey(Axis axis);
 
@@ -25,8 +28,10 @@ private:
     void KeyUp();
     void KeyDown();
 
+    //int nut, nut2;
     const Uint8* m_KeyStates;
     static Input* s_Instance;
+    SDL_Event luu;
 };
 
 #endif

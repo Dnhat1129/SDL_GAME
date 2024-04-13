@@ -23,49 +23,14 @@ struct EnemyList {
 class Enemy : public GameObject {
 public:
   
-        Enemy(Properties* e_props) : GameObject(e_props) {
-            e_TextureID = e_props->TextureID;
-            e_Width = e_props->Width;
-            e_Height = e_props->Height; 
-            e_Flip = e_props->Flip;
-
-            e_Transform = new Transform(e_props->X, e_props->Y);
-
-            e_IsRunning = false;
-            e_IsJumping = false;
-            e_IsFalling = false;
-            e_IsGrounded = false;
-            e_IsAttacking = false;
-            e_IsDie = false;
-
-            
-            TDST.push_back(EnemyList(5000, "so1.png", 5));
-            TDST.push_back(EnemyList(10000, "so2.png", 10));
-
-            e_Flip = SDL_FLIP_NONE;
-            e_JumpForce = JUMP_FORCE;
-            e_HP = TDST[0].HP;
-            e_time = 0;
-            e_dame = TDST[0].Dame;
-            isCurrentEnemyUpdated = false;
-            
-
-            e_Collider = new Collider();
-            e_Collider->SetBuffer(-5, 0, 10, 0);
-
-            e_RigidBody = new RigidBody();
-            e_RigidBody->SetGravity(3.0f);
-
-            e_Animation = new Animation();
-            e_Animation->SetProps("enemy", 0, 3, 100);
-
-            
-    }
+    Enemy(Properties* e_props, int currentenemy);
 
     virtual void Draw();
     virtual void Clean();
     virtual void Update(float dt);
     void Load();
+    void Luu();
+    void SetContinue();
 
     SDL_Rect GetBox() { return e_Collider->Get(); }
     bool CheckAttack() { return e_IsAttacking; }
@@ -74,6 +39,27 @@ public:
     bool GetIsDie() { return e_IsDie; }
     Transform* GetPosition() { return e_Transform; }
 
+    bool GetIsRunning() { return e_IsRunning; }
+    SDL_RendererFlip GetFlip() { return e_Flip; }
+    bool GetComplete1() {return completemap1;}
+    bool GetSkill() { return e_skill; }
+    int GetCurrentEnemy() { 
+        if (CurrentEnemy != TDST.size() - 1) return (CurrentEnemy+1);
+        return -1;
+    }
+
+    /*void Reset() {
+        e_Transform->X = 1184;
+        e_Transform->Y = 437;
+        CurrentEnemy = 0;
+        e_HP = TDST[CurrentEnemy].HP;
+        e_dame = TDST[CurrentEnemy].Dame;
+        completemap1 = false;
+        e_time = 0;
+        e_skill = false;
+        e_IsDie = false;
+
+    }*/
     
 private: Transform* e_Transform;
        int e_Width, e_Height;
@@ -90,7 +76,7 @@ private:
     bool e_IsGrounded;
     bool e_IsAttacking;
     bool e_IsDie;
-
+    bool e_skill;
 
     float e_JumpForce;
     float e_time;
@@ -104,9 +90,10 @@ private:
 
     Vector2D e_LastSafePosition;
 private:
-    int CurrentEnemy = 0;
-    bool isCurrentEnemyUpdated;
+    int CurrentEnemy;
     std::vector <EnemyList> TDST;
+    int e_max_HP;
+    bool completemap1;
 };
 
 #endif

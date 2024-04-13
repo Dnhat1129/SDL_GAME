@@ -20,11 +20,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h" />
+    <ClInclude Include="Boss.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Collider.h" />
     <ClInclude Include="CollisionHandler.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="Engine.h" />
+    <ClInclude Include="FontManager.h" />
     <ClInclude Include="GameMap.h" />
     <ClInclude Include="GameObject.h">
       <DeploymentContent>false</DeploymentContent>
@@ -32,9 +34,12 @@
     <ClInclude Include="Input.h" />
     <ClInclude Include="Layer.h" />
     <ClInclude Include="MapParser.h" />
+    <ClInclude Include="Menustage.h" />
+    <ClInclude Include="PlayPK.h" />
     <ClInclude Include="Point.h" />
     <ClInclude Include="RigidBody.h" />
     <ClInclude Include="ShortestPath.h" />
+    <ClInclude Include="SoundManager.h" />
     <ClInclude Include="TextureManager.h" />
     <ClInclude Include="TileLayer.h" />
     <ClInclude Include="Timer.h" />
@@ -46,16 +51,21 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Animation.cpp" />
+    <ClCompile Include="Boss.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CollisionHandler.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="Engine.cpp" />
+    <ClCompile Include="FontManager.cpp" />
     <ClCompile Include="GameMap.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MapParser.cpp" />
+    <ClCompile Include="Menustage.cpp" />
+    <ClCompile Include="PlayPK.cpp" />
     <ClCompile Include="RigidBody.cpp" />
+    <ClCompile Include="SoundManager.cpp" />
     <ClCompile Include="TextureManager.cpp" />
     <ClCompile Include="TileLayer.cpp" />
     <ClCompile Include="Timer.cpp" />

@@ -1,6 +1,8 @@
 #include "Animation.h"
 #include "TextureManager.h"
 #include <iostream>
+#include "Warrior.h"
+
 
 void Animation::Update() {
 	m_CurrentFrame = (SDL_GetTicks() / m_Speed) % m_FrameCount;
@@ -14,6 +16,10 @@ void Animation::SetProps(std::string textureID, int spriteRow, int frameCount, i
 	m_SpriteRow = spriteRow;
 	m_FrameCount = frameCount;
 	m_Speed = speed;
+}
+
+void Animation::DrawKame(float x, float y, int width, int height, int currentframe, SDL_RendererFlip flip) {
+	TextureManager::GetInstance()->DrawFrame(m_TextureID, x, y, width, height, m_SpriteRow, currentframe, flip);
 }
 
 void Animation::Reset() {

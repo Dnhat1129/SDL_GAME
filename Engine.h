@@ -8,9 +8,14 @@
 #include <SDL_mixer.h>
 #include <SDL_ttf.h>
 #include "GameMap.h"
+#include "SoundManager.h"
+#include "FontManager.h"
 
 class Warrior; // Forward declaration
 class Enemy;   // Forward declaration
+class Boss;
+class PlayPK;
+class Menustage;
 
 
 /// Screen
@@ -19,7 +24,11 @@ const int SCREEN_HEIGHT = 640;
 
 class Engine {
 public:
-    Engine() {};
+    Engine() {
+        isMap1 = true; isMap2 = false;
+        checkloadmap = false; checkloadmap = false;
+        checkcontinue = false;
+    };
     static Engine* GetInstance() {
         if (s_Instance != nullptr)
             return s_Instance;
@@ -31,6 +40,7 @@ public:
     bool Clean();
     void Quit();
 
+
     void Update();
     void Render();
     void Events();
@@ -41,6 +51,13 @@ public:
     
     Warrior* GetWarrior() { return player; }
     Enemy* GetEnemy() { return enemy; }
+    Boss* GetBoss() { return boss; }
+    PlayPK* GetPlayPK() { return playPK; }
+    Menustage* GetMenu() { return menu; }
+
+    bool GetMap1() { return isMap1; } 
+    bool GetMap2() { return isMap2; }
+
 private:
     bool m_IsRunning = true;
 
@@ -48,8 +65,18 @@ private:
     SDL_Window* m_Window;
     SDL_Renderer* m_Renderer;
     static Engine* s_Instance;
+
     Warrior* player;
     Enemy* enemy;
+    Boss* boss;
+    PlayPK* playPK;
+    Menustage* menu;
+
+    FontManager* m_FontManager;
+private:
+    bool isMap1; bool isMap2; 
+    bool checkloadmap; bool checkloadmap2; int CurrentEnemy; int CurrentBoss;
+    bool checkcontinue;
 };
 
 #endif // ENGINE_H

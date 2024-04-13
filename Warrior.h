@@ -17,46 +17,13 @@
 class Warrior : public GameObject {
     
     public:
-        Warrior(Properties* props) : GameObject(props) {
-            m_TextureID = props->TextureID;
-            m_Width = props->Width;
-            m_Height = props->Height;
-            m_Flip = props->Flip;
-
-            m_Transform = new Transform(props->X, props->Y);
-
-            m_IsRunning = false;
-            m_IsJumping = false;
-            m_IsFalling = false;
-            m_IsGrounded = false;
-            m_IsAttacking = false;
-            m_IsKame = false;
-            m_IsDie = false;
-            ssj = true;
-
-            m_Flip = SDL_FLIP_NONE;
-            m_JumpForce = JUMP_FORCE;
-            m_HP = 1000;
-            m_dame = 10;
-            time_sjjkhi = 0;
-            time_kame = 0;
-
-            m_Collider = new Collider();
-            m_Collider->SetBuffer(-10, 0, 15, 0);
-
-            m_RigidBody = new RigidBody();
-            m_RigidBody->SetGravity(3.0f);
-
-            m_Animation = new Animation();
-            m_Animation->SetProps("player_right", 0, 3, 100);
-
-            ssj_Animation = new Animation();
-            player_kame = new Animation();
-        }
+        Warrior(Properties* props);
         virtual void Draw();
         virtual void Clean();
         virtual void Update(float dt);
         void Load();
+        void Luu();
+        void SetContinue();
 
         bool CheckAttack() { return m_IsAttacking; }
         Transform* GetPosition() { return m_Transform; }
@@ -64,7 +31,17 @@ class Warrior : public GameObject {
         SDL_RendererFlip GetFlip() { return m_Flip; }
         int GetHP() { return m_HP; }
         int GetDame() { return m_dame; }
-        Animation* GetKameAnimation() { return player_kame; }
+        int GetKameFrame() { return kame_frame; }
+        bool GetIsKame() { return m_IsKame; }
+        bool GetIsRunning() { return m_IsRunning; }
+
+        void Reset() {
+            m_Transform->X = 100;
+            m_Transform->Y = 100;
+
+            m_Origin->X = 80;
+            m_Origin->Y = 87.5;
+        }
 
     private: 
         void AnimationState();
@@ -76,7 +53,6 @@ class Warrior : public GameObject {
         bool m_IsAttacking;
 
 
-        float m_JumpForce;
         
         
         Collider* m_Collider;
@@ -88,21 +64,19 @@ class Warrior : public GameObject {
         Vector2D m_LastSafePosition;
     private:
         bool m_IsDie;
-        int m_HP;
+        int m_HP; int max_HP;
         int m_MN;
         int m_dame;
         float m_Time;
 
-        bool ssj, khi;
+        bool ssj;
+        int checkload;
 
-        bool m_IsKame;
+        bool m_IsKame; int kame_frame;
         Animation* ssj_Animation;
-        float time_sjjkhi;
-        Animation* player_kame;
+        float time_ssj;
         float time_kame;
-
-
-        std::vector<Warrior> CharacterList;
+        Animation* kame_Animation;
 
     protected:
         Transform* m_Transform;
@@ -111,4 +85,4 @@ class Warrior : public GameObject {
         SDL_RendererFlip m_Flip;
 };
 
-#endif
+#endif 

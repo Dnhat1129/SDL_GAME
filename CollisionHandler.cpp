@@ -9,6 +9,11 @@ CollisionHandler::CollisionHandler() {
 	m_CollisionTilemap = m_CollisionLayer->GetTileMap();
 }
 
+void CollisionHandler::Update() {
+    m_CollisionLayer = (TileLayer*)Engine::GetInstance()->GetMap()->GetLayers()[0];
+    m_CollisionTilemap = m_CollisionLayer->GetTileMap();
+}
+
 bool CollisionHandler::CheckCollision(SDL_Rect a, SDL_Rect b) {
 	bool x_overlaps = (a.x <= b.x + b.w) && (a.x + a.w >= b.x);
 	bool y_overlaps = (a.y <= b.y + b.h) && (a.y + a.h >= b.y);
@@ -16,7 +21,6 @@ bool CollisionHandler::CheckCollision(SDL_Rect a, SDL_Rect b) {
 }
 
 bool CollisionHandler::MapCollision(SDL_Rect a, int tileSize, int RowCount, int ColCount) {
-
     int left_tile = static_cast<int> (std::round(static_cast<float>(a.x / tileSize)));
     int right_tile = static_cast<int> (std::round(static_cast<float>((a.x + a.w) / tileSize)));
 
