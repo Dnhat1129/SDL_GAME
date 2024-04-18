@@ -542,9 +542,6 @@ void PlayPK::Update(float dt) {
 	Cam->X = (p1_Origin->X + p2_Origin->X) / 2;
 	Cam->Y = (p1_Origin->Y + p2_Origin->Y) / 2;
 
-	std::cout << Cam->X << " " << Cam->Y << std::endl;
-
-	std::cout << p2_currentframe <<" " << p1_time_skill << std::endl;
 }
 
 void PlayPK::AnimationState(std::string id) {

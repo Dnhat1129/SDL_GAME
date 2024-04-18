@@ -60,7 +60,6 @@ void SoundManager::UpdateSound() {
     else stopSound("run");
     if (Engine::GetInstance()->GetWarrior()->GetIsKame()) playSound("kamehameha");
     else stopSound("kamehameha");
-    std::cout << Menustage::GetInstance()->GetIsMenu() << std::endl;
 }
 
 void SoundManager::Load() {

@@ -9,6 +9,7 @@
 #include "Boss.h"
 #include <fstream>
 #include <sstream>
+#include "FontManager.h"
 
 Warrior::Warrior(Properties* props) : GameObject(props) {
 	m_TextureID = props->TextureID;
@@ -34,6 +35,9 @@ Warrior::Warrior(Properties* props) : GameObject(props) {
 	time_ssj = 0;
 	time_kame = 0;
 	kame_frame = 0;
+	dau_than = 10;
+	time_dau_than = 0;
+	time_dau_than_max = 600;
 
 	m_Collider = new Collider();
 	m_Collider->SetBuffer(-10, 0, 15, 0);
@@ -47,6 +51,7 @@ Warrior::Warrior(Properties* props) : GameObject(props) {
 	kame_Animation = new Animation();
 
 	ssj_Animation = new Animation();
+
 }
 
 void Warrior::Draw() {
@@ -78,6 +83,26 @@ void Warrior::Draw() {
 	TextureManager::GetInstance()->Draw("HP", static_cast<int>(vitri_khung) + 43, 12, vitri_hp, 25);
 	TextureManager::GetInstance()->Draw("MN", static_cast<int>(vitri_khung) + 43, 47, 137, 12);
 
+	float vitri_dau_X = vitri_khung;
+	float vitri_dau_Y = 180;
+	int loaddau = 60;
+	if (time_dau_than < 0) loaddau = 1.0 * (600 - abs(time_dau_than)) / time_dau_than_max * 60;
+	TextureManager::GetInstance()->Draw("dau_than", static_cast<int>(vitri_dau_X) , static_cast<int> (vitri_dau_Y), 60, loaddau, SDL_FLIP_NONE);
+	std::cout << time_dau_than<<" " << loaddau << std::endl;
+	Vector2D cam = Camera::GetInstance()->GetPosition();
+	
+
+	FontManager* font = Engine::GetInstance()->GetFont();
+	SDL_Color textColor = { 255, 255, 255, 255 };
+	if (font->isFontLoaded()) {
+		SDL_Texture* textTexture = font->renderText(std::to_string(dau_than), textColor, font->getFont(), Engine::GetInstance()->GetRenderer());
+		if (textTexture) {
+			SDL_Rect customRect = { vitri_dau_X + 10 -cam.X, vitri_dau_Y-cam.Y + 20, 30, 30 };
+			SDL_RenderCopy(Engine::GetInstance()->GetRenderer(), textTexture, NULL, &customRect);
+			SDL_DestroyTexture(textTexture);
+		}
+	}
+	
 	/*Vector2D cam = Camera::GetInstance()->GetPosition();
 	SDL_Rect box = m_Collider->Get();
 	//m_Collider->Set(m_Transform->X, m_Transform->Y, 60, 75);
@@ -171,6 +196,18 @@ void Warrior::Update(float dt) {
 			TextureManager::GetInstance()->Load("player_kame", "LamGame/Picture/Character/base_kame.png");
 			checkload = 0;
 		}
+
+		
+		//dauthan
+		if (time_dau_than < 0) {
+			time_dau_than += dt;
+		}
+		if (Input::GetInstance()->GetKeyDown(SDL_SCANCODE_SPACE) && time_dau_than >= 0) {
+			time_dau_than = -600;
+			dau_than -= 1;
+			m_HP = max_HP;
+		}
+
 		//danh nhau map 1
 		Enemy* enemy = Engine::GetInstance()->GetEnemy();
 		if (Engine::GetInstance()->GetMap1()) {
@@ -341,6 +378,8 @@ void Warrior::Load() {
 	TextureManager::GetInstance()->Load("MN", "LamGame/Picture/hp + mana/mana.png");
 	TextureManager::GetInstance()->Load("player_ssj", "LamGame/Picture/Character/bienssj.png");
 
+	TextureManager::GetInstance()->Load("dau_than", "LamGame/Picture/Character/dau_than.png");
+
 }
 
 void Warrior::Luu() {
@@ -349,6 +388,7 @@ void Warrior::Luu() {
 		out << m_Transform->X << std::endl << m_Transform->Y << std::endl;
 		out << m_HP << std::endl << m_MN << std::endl << m_dame << std::endl;
 		out << ssj << std::endl << time_kame << std::endl;
+		out << dau_than << std::endl;
 	}
 	out.close();
 
@@ -370,6 +410,7 @@ void Warrior::SetContinue() {
 		case 5: iss >> m_dame; break;
 		case 6: iss >> ssj; break;
 		case 7: iss >> time_kame; break;
+		case 8: iss >> dau_than; break;
 		default: break;
 		}
 	}

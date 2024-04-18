@@ -7,6 +7,8 @@
 #include "Vector2D.h"
 #include "GameObject.h"
 #include <vector>
+#include "FontManager.h"
+#include <string>
 
 #define JUMP_TIME 15.0f
 #define JUMP_FORCE 10.0f
@@ -77,6 +79,7 @@ class Warrior : public GameObject {
         float time_ssj;
         float time_kame;
         Animation* kame_Animation;
+        int dau_than; float time_dau_than; float time_dau_than_max;
 
     protected:
         Transform* m_Transform;

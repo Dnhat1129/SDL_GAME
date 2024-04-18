@@ -54,6 +54,7 @@ public:
     Boss* GetBoss() { return boss; }
     PlayPK* GetPlayPK() { return playPK; }
     Menustage* GetMenu() { return menu; }
+    FontManager* GetFont() { return m_FontManager; }
 
     bool GetMap1() { return isMap1; } 
     bool GetMap2() { return isMap2; }

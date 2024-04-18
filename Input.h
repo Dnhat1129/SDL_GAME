@@ -18,8 +18,6 @@ public:
     void Listen();
     bool GetKeyDown(SDL_Scancode key);
     bool ListenMouse(SDL_Rect check);
-    //int Getnut() const { return nut; }
-    //int Getnut2() const { return nut2; }
 
     int GetAxisKey(Axis axis);
 
