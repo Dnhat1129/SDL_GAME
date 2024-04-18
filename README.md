@@ -1,4 +1,4 @@
-# SONGOKU ADVENTURE
+![over](https://github.com/Dnhat1129/SDL_GAME/assets/160511821/c17b06a1-681e-4869-8250-c01af0130e9f)# SONGOKU ADVENTURE
 # Giới thiệu
 ●  Họ và tên: Đoàn Long Nhật
 
@@ -38,4 +38,12 @@ Game có hai chế độ là chế độ cốt truyệt và chế độ đối k
 
 ●  Ở chế độ đối kháng: Đây là chế độ 2 người chơi, 2 người chơi sẽ chọn nhân vật của mình và đối đầu nhau
 ## Một số hình ảnh trong game
-![example](Picture/PictureGame/menu.png)
+![mau](menu.png)
+![mau](map1.png)
+![mau](map2.png)
+![mau](rong.png)
+![mau](pause.png)
+![mau](pk1.png)
+![mau](pk2.png)
+![mau](over.png)
+
