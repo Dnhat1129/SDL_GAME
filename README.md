@@ -1,4 +1,4 @@
-![over](https://github.com/Dnhat1129/SDL_GAME/assets/160511821/c17b06a1-681e-4869-8250-c01af0130e9f)# SONGOKU ADVENTURE
+# SONGOKU ADVENTURE
 # Giới thiệu
 ●  Họ và tên: Đoàn Long Nhật
 
