@@ -57,6 +57,7 @@ public:
 
     bool GetMap1() { return isMap1; } 
     bool GetMap2() { return isMap2; }
+    bool Getover() { return gameover; }
 
 private:
     bool m_IsRunning = true;
@@ -77,6 +78,7 @@ private:
     bool isMap1; bool isMap2; 
     bool checkloadmap; bool checkloadmap2; int CurrentEnemy; int CurrentBoss;
     bool checkcontinue;
+    bool gameover;
 };
 
 #endif // ENGINE_H

@@ -10,7 +10,8 @@ CollisionHandler::CollisionHandler() {
 }
 
 void CollisionHandler::Update() {
-    m_CollisionLayer = (TileLayer*)Engine::GetInstance()->GetMap()->GetLayers()[0];
+    TileLayer* temp_CollisionLayer = (TileLayer*)Engine::GetInstance()->GetMap()->GetLayers()[0];
+    m_CollisionLayer = temp_CollisionLayer;
     m_CollisionTilemap = m_CollisionLayer->GetTileMap();
 }
 

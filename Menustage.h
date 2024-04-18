@@ -32,7 +32,9 @@ public:
 	bool GetModePK() { return IsModePK; }
 	bool GetPK() { return IsPlayPK; }
 
-	bool GetPause() { return IsPause; }
+	bool GetPauseS() { return IsPauseS; }
+	bool GetPauseP() { return IsPauseP; }
+
 	bool GetContinue() { return IsContinue; }
 	bool GetNewgame() { return IsPauseNewgame; }
 
@@ -48,12 +50,15 @@ private:
 	SDL_Rect Credits;
 	SDL_Rect Exit;
 	SDL_Rect ModeStory; SDL_Rect ModePK;
+	SDL_Rect Yes;
+	SDL_Rect No;
 
 private:
 	bool IsMenu; bool IsMode; bool IsModePK;
 	bool IsPlayStory;
 	bool IsPlayPK;
-	bool IsPause;
+	bool IsPauseS;
+	bool IsPauseP;
 	bool IsContinue;
 	bool IsPauseNewgame;
 	Vector2D Cam;

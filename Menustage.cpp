@@ -24,11 +24,15 @@ Menustage::Menustage() {
 
 	Exit = { 182, 586, 598, 54 };
 
+	Yes = { 374, 516, 66, 24 };
+	No = { 521, 516, 54, 24 };
+
 	chuot = Input::GetInstance();
 	IsMenu = true; IsMode = false; IsModePK = false;
 	IsPlayStory = false;
 	IsPlayPK = false;
-	IsPause = false;
+	IsPauseP = false;
+	IsPauseS = false;
 	Cam = Vector2D(0, 0);
 }
 
@@ -36,15 +40,26 @@ void Menustage::Draw() {
 	TextureManager::GetInstance()->Draw("menu", Cam.X, 0, 960, 640);
 	if (IsMode) TextureManager::GetInstance()->Draw("mode", 130 + Cam.X, 259, 700, 250);
 	if (IsModePK) TextureManager::GetInstance()->Draw("ModePK", Cam.X, 0, 960, 640);
-	if (IsPause) TextureManager::GetInstance()->Draw("pause", Cam.X, 0, 960, 640);
+	if (IsPauseP || IsPauseS) TextureManager::GetInstance()->Draw("pause", Cam.X, 0, 960, 640);
+	if (Engine::GetInstance()->Getover()) TextureManager::GetInstance()->Draw("over", Cam.X, 0, 960, 640);
 }
 
 void Menustage::Update() {
 	Cam.X = Camera::GetInstance()->GetPosition().X;
+
 	if (IsMenu) {
 		if (chuot->ListenMouse(NewGame)) {
 			IsMode = true;
+
 		}
+		if (chuot->ListenMouse(Exit)) Engine::GetInstance()->Quit();
+	}
+
+	if (IsMode || IsModePK || IsPauseS || IsPauseP) {
+		IsMenu = true;
+	}
+	if (IsPlayStory || IsPlayPK) {
+		IsMenu = false;
 	}
 
 	if (IsMode) {
@@ -57,39 +72,51 @@ void Menustage::Update() {
 			IsMode = false;
 		}
 	}
+
+	if ((Engine::GetInstance()->Getover())) {
+		//IsMenu = true;
+		IsModePK = false;
+		IsMode = false;
+		IsPlayStory = false;
+		IsPlayPK = false;
+		if (chuot->ListenMouse(Yes) || chuot->ListenMouse(No)) {
+			IsMenu = true;
+			IsPauseNewgame = true;
+		}
+	}
 }
 
 void Menustage::UpdateStory() {
 	if (IsPlayStory) {
-		IsPauseNewgame = false;
 		IsMenu = false;
+		IsPauseNewgame = false;
 		if (chuot->ListenMouse(nutpause)) {
-			IsPause = true;
+			IsPauseS = true;
 			IsPlayStory = false;
 			IsContinue = false;
 		}
 	}
-	if (IsPause) {
+	if (IsPauseS) {
 		if (chuot->ListenMouse(Continue)) {
-			IsPause = false;
+			IsPauseS = false;
 			IsMenu = false;
 			IsContinue = true;
 			IsPlayStory = true;
 		}
 		if (chuot->ListenMouse(NewGame)) {
-			IsPauseNewgame = true;
+			IsPauseS = false;
 			IsMenu = true;
-			IsPause = false;
-			IsPlayStory = true;
+			IsPlayStory = false;
 			IsPlayPK = false;
+			IsPauseNewgame = true;
 		}
 	}
+	
 }
 
 void Menustage::UpdatePK() {
-	//std::cout << IsModePK << " " << IsPlayPK << " " << std::endl;
-	IsPlayStory = false;
 	if (IsModePK) {
+		IsMenu = false;
 		IsPauseNewgame = false;
 		if (Engine::GetInstance()->GetPlayPK()->Checkback()) {
 			IsMenu = true;
@@ -105,26 +132,29 @@ void Menustage::UpdatePK() {
 		if (IsPlayPK) {
 			IsMenu = false;
 			if (chuot->ListenMouse(nutpause)) {
-				IsPause = true;
+				IsPauseP = true;
 				IsPlayPK = false;
 				IsContinue = false;
 			}
 		}
-		if (IsPause) {
+		if (IsPauseP) {
 			if (chuot->ListenMouse(Continue)) {
-				IsPause = false;
+				IsPauseP = false;
 				IsMenu = false;
 				IsContinue = true;
 				IsPlayPK = true;
 			}
 			if (chuot->ListenMouse(NewGame)) {
 				IsPauseNewgame = true;
+				IsPauseP = false;
 				IsMenu = true;
-				IsPause = false;
 				IsPlayStory = false;
 				IsPlayPK = false;
 			}
 		}
+	}
+	if (IsModePK || IsPlayPK) {
+		IsPlayStory = false;
 	}
 }
 
@@ -133,6 +163,7 @@ void Menustage::Clean() {
 	TextureManager::GetInstance()->Drop("mode");
 	TextureManager::GetInstance()->Drop("pause");
 	TextureManager::GetInstance()->Drop("ModePK");
+	TextureManager::GetInstance()->Drop("over");
 }
 
 void Menustage::Load() {
@@ -140,5 +171,5 @@ void Menustage::Load() {
 	TextureManager::GetInstance()->Load("mode", "LamGame/Picture/menu/mode.png");
 	TextureManager::GetInstance()->Load("pause", "LamGame/Picture/menu/pause.png");
 	TextureManager::GetInstance()->Load("ModePK", "LamGame/Picture/menu/PK.png");
-
+	TextureManager::GetInstance()->Load("over", "LamGame/Picture/menu/over.png");
 }

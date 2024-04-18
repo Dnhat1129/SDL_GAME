@@ -3,6 +3,8 @@
 #include "Engine.h"
 #include "Warrior.h"
 #include "Enemy.h"
+#include "Boss.h"
+#include "PlayPK.h"
 SoundManager* SoundManager::s_Instance = nullptr;
 
 SoundManager::SoundManager() {
@@ -52,11 +54,13 @@ void SoundManager::UpdateSound() {
     if (Engine::GetInstance()->GetWarrior()->CheckAttack() || Engine::GetInstance()->GetEnemy()->CheckAttack())
         playSound("attack");
     else stopSound("attack");
-    if (Engine::GetInstance()->GetWarrior()->GetIsRunning() || Engine::GetInstance()->GetEnemy()->GetIsRunning())
+    if (Engine::GetInstance()->GetWarrior()->GetIsRunning() || Engine::GetInstance()->GetEnemy()->GetIsRunning() 
+        || Engine::GetInstance()->GetBoss()->GetIsRunning() || Engine::GetInstance()->GetPlayPK()->GetIsRunning())
         playSound("run");
     else stopSound("run");
     if (Engine::GetInstance()->GetWarrior()->GetIsKame()) playSound("kamehameha");
     else stopSound("kamehameha");
+    std::cout << Menustage::GetInstance()->GetIsMenu() << std::endl;
 }
 
 void SoundManager::Load() {

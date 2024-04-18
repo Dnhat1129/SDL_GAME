@@ -295,10 +295,10 @@ void Enemy::Update(float dt) {
 			}
 
 			//Check vuot ra khoi map
-			if (e_Transform->X < 0 || e_Transform->X + e_Width > 1920) {
+			if (e_Transform->X < 5 || e_Transform->X + e_Width > 1915) {
 				e_Transform->X = e_LastSafePosition.X;
 			}
-			if (e_Transform->Y < 0 || e_Transform->Y + e_Height > 640) {
+			if (e_Transform->Y < 5 || e_Transform->Y + e_Height > 635) {
 				e_Transform->Y = e_LastSafePosition.Y;
 			}
 

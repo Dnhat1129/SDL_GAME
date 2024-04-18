@@ -278,10 +278,10 @@ void Warrior::Update(float dt) {
 		}
 
 		//Check vuot ra khoi map
-		if (m_Transform->X < 0 || m_Transform->X + m_Width > 1920) {
+		if (m_Transform->X < 5 || m_Transform->X + m_Width > 1915) {
 			m_Transform->X = m_LastSafePosition.X;
 		}
-		if (m_Transform->Y < 0 || m_Transform->Y + m_Height > 640) {
+		if (m_Transform->Y < 5 || m_Transform->Y + m_Height > 635) {
 			m_Transform->Y = m_LastSafePosition.Y;
 		}
 

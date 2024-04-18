@@ -64,10 +64,10 @@ bool Engine::Init()
     m_FontManager->loadFont();
 
     TextureManager::GetInstance()->Load("mui_ten", "LamGame/Picture/maps/chiduong.png");
-    
+
 
     player = new Warrior(new Properties("player", 100, 100, 60, 75));
-    enemy = new Enemy(new Properties("enemy", 1184, 437, 60, 75),0);
+    enemy = new Enemy(new Properties("enemy", 1184, 437, 60, 75), 0);
     boss = new Boss(new Properties("boss", 1280, 512, 60, 75), 0);
     playPK = new PlayPK();
 
@@ -75,10 +75,11 @@ bool Engine::Init()
     enemy->Load();
     boss->Load();
     playPK->Load();
-    
-   
+
+
     TextureManager::GetInstance()->Load("bg1", "LamGame/Picture/Bg/background0.png");
     TextureManager::GetInstance()->Load("bg2", "LamGame/Picture/Bg/rock.png");
+    TextureManager::GetInstance()->Load("rong", "LamGame/Picture/Character/rong.png");
 
     Camera::GetInstance()->SetTarget(player->GetOrigin());
     return m_IsRunning = true;
@@ -86,16 +87,18 @@ bool Engine::Init()
 
 void Engine::Render()
 {
+    float dt = Timer::GetInstance()->GetDeltaTime();
     SDL_SetRenderDrawColor(m_Renderer, 124, 218, 254, 255);
     SDL_RenderClear(m_Renderer);
 
-    if (menu->GetIsMenu() || menu->GetIsMode() || menu->GetModePK() || menu->GetPause()) { menu->Draw(); }
-    else if (menu->GetStory()) {
+    if (menu->GetIsMenu() || menu->GetIsMode() || menu->GetModePK() || menu->GetPauseP() || menu->GetPauseS() || gameover) { menu->Draw(); }
+    if (menu->GetStory()) {
         TextureManager::GetInstance()->Draw("bg1", 0, 0, 1920, 1080);
         //map1
         m_LevelMap->Render();
-        if (isMap1) enemy->Draw();
-        player->Draw();
+        if (isMap1) {
+            enemy->Draw();
+        }
 
         //xong map 1
         if (enemy->GetComplete1() && !isMap2) {
@@ -112,17 +115,24 @@ void Engine::Render()
             }
             TextureManager::GetInstance()->Draw("mui_ten", 1792, 64, 64, 64);
         }
+
+        player->Draw();
+     
         //map2
         if (isMap2) {
             boss->Draw();
         }
+
+        //xong map 2
+        if (boss->GetComplete2() && !isMap1) {
+            TextureManager::GetInstance()->Draw("rong", 771, 0, 377, 512);
+        }
+    }
+    else if (menu->GetModePK()) {
+        playPK->UpdateModePK(dt);
     }
     else if (menu->GetPK()) {
         TextureManager::GetInstance()->Draw("bg2", 0, 0, 1920, 1080);
-        
-        if (menu->GetModePK()) {
-            playPK->UpdateModePK();
-        }
 
         m_LevelMap->Render();
         playPK->Draw();
@@ -133,11 +143,11 @@ void Engine::Render()
 
 void Engine::Update()
 {
+    gameover = player->GetHP() <= 0;
     menu->Update();
-    sound->UpdateSound();
+    
     menu->UpdateStory();
     menu->UpdatePK();
-
 
     if (menu->GetNewgame()) {
         CurrentEnemy = 0;
@@ -162,99 +172,109 @@ void Engine::Update()
 
         checkloadmap = false;
         checkloadmap2 = false;
+        checkcontinue = false;
 
         Camera::GetInstance()->SetTarget(player->GetOrigin());
 
         PlayPK* tempplayPK = new PlayPK();
         delete playPK;
         playPK = tempplayPK;
+
+        gameover = false;
+
     }
-    
+
+    if (gameover) return;
 
     if (menu->GetStory()) {
 
-            if (menu->GetContinue() && !checkcontinue) {
-                player->SetContinue();
-                if (isMap1) enemy->SetContinue();
-                else if (isMap2) boss->SetContinue();
-                checkcontinue = true;
-            }
-
-            if (!checkloadmap) {
-                MapParser::GetInstance()->Load();
-                m_LevelMap = MapParser::GetInstance()->GetMap("MAP");
-                CollisionHandler::GetInstance()->Update();
-                checkloadmap = true;
-            }
-            if (!menu->GetPause()) {
-                isMap1 = !enemy->GetComplete1();
-                if (!isMap2 && !isMap1 && abs(player->GetPosition()->X - 1798) < 3 && abs(player->GetPosition()->Y - 180) < 3 && Input::GetInstance()->GetKeyDown(SDL_SCANCODE_N))
-                {
-                    isMap2 = true;
-                    isMap1 = false;
-                }
-
-                float dt = Timer::GetInstance()->GetDeltaTime();
-                m_LevelMap->Update();
-                player->Update(dt);
-                player->Luu();
-
-                if (isMap1) {
-                    CurrentEnemy = enemy->GetCurrentEnemy();
-                    if (enemy->GetIsDie() && CurrentEnemy >= 0) {
-                        Enemy* tempEnemy = new Enemy(new Properties("enemy", 300, 100, 60, 75), CurrentEnemy);
-                        tempEnemy->Load();
-                        delete enemy;
-                        enemy = tempEnemy;
-                    }
-                    enemy->Update(dt);
-                    enemy->Luu();
-
-                }
-                if (isMap2) {
-                    // enemy->Clean();
-                    if (!checkloadmap2) {
-                        player->Reset();
-                        MapParser::GetInstance()->Load();
-                        m_LevelMap = MapParser::GetInstance()->GetMap("MAP");
-                        CollisionHandler::GetInstance()->Update();
-                        checkloadmap2 = true;
-                    }
-                    CurrentBoss = boss->GetCurrentBoss();
-                    if (boss->GetIsDie() && CurrentBoss >= 0) {
-                        Boss* tempBoss = new Boss(new Properties("boss", 300, 100, 60, 75), CurrentBoss);
-                        tempBoss->Load();
-                        delete boss;
-                        boss = tempBoss;
-                    }
-
-                    boss->Update(dt);
-                    boss->Luu();
-                }
-                Camera::GetInstance()->Update(dt);
-            }
-    }
-    else if (menu->GetModePK()) {
-        playPK->UpdateModePK();
-    }
-    else if (menu->GetPK()) {
+        if (menu->GetContinue() && !checkcontinue) {
+            player->SetContinue();
+            if (isMap1) enemy->SetContinue();
+            else if (isMap2) boss->SetContinue();
+            checkcontinue = true;
+        }
 
         if (!checkloadmap) {
             MapParser::GetInstance()->Load();
             m_LevelMap = MapParser::GetInstance()->GetMap("MAP");
+            CollisionHandler::GetInstance()->Update();
+            checkloadmap = true;
+        }
+        if (!menu->GetPauseS()) {
+            isMap1 = !enemy->GetComplete1();
+            if (!isMap2 && !isMap1 && abs(player->GetPosition()->X - 1798) < 3 && abs(player->GetPosition()->Y - 180) < 3 && Input::GetInstance()->GetKeyDown(SDL_SCANCODE_N))
+            {
+                isMap2 = true;
+                isMap1 = false;
+            }
+
+            float dt = Timer::GetInstance()->GetDeltaTime();
+            m_LevelMap->Update();
+            player->Update(dt);
+            player->Luu();
+
+            if (isMap1) {
+                CurrentEnemy = enemy->GetCurrentEnemy();
+                if (enemy->GetIsDie() && CurrentEnemy >= 0) {
+                    Enemy* tempEnemy = new Enemy(new Properties("enemy", 300, 100, 60, 75), CurrentEnemy);
+                    tempEnemy->Load();
+                    delete enemy;
+                    enemy = tempEnemy;
+                }
+                enemy->Update(dt);
+                enemy->Luu();
+
+            }
+            if (isMap2) {
+                // enemy->Clean();
+                if (!checkloadmap2) {
+                    player->Reset();
+                    MapParser::GetInstance()->Load();
+                    m_LevelMap = MapParser::GetInstance()->GetMap("MAP");
+                    CollisionHandler::GetInstance()->Update();
+                    checkloadmap2 = true;
+                }
+                CurrentBoss = boss->GetCurrentBoss();
+                if (boss->GetIsDie() && CurrentBoss >= 0) {
+                    Boss* tempBoss = new Boss(new Properties("boss", 300, 100, 60, 75), CurrentBoss);
+                    tempBoss->Load();
+                    delete boss;
+                    boss = tempBoss;
+                }
+
+                boss->Update(dt);
+                boss->Luu();
+            }
+            Camera::GetInstance()->Update(dt);
+        }
+    }
+    else if (menu->GetPK()) {
+
+        if (menu->GetContinue() && !checkcontinue) {
+            playPK->SetContinue();
+            playPK->Load();
+            checkcontinue = true;
+        }
+
+        if (!checkloadmap) {
+            MapParser::GetInstance()->Load();
+            m_LevelMap = MapParser::GetInstance()->GetMap("MAP");
+            CollisionHandler::GetInstance()->Update();
             Camera::GetInstance()->SetTarget(playPK->GetOrigin());
             playPK->Load();
             checkloadmap = true;
         }
 
-        if (!menu->GetPause()) {
+        if (!menu->GetPauseP()) {
             float dt = Timer::GetInstance()->GetDeltaTime();
             m_LevelMap->Update();
             playPK->Update(dt);
-
+            playPK->Luu();
             Camera::GetInstance()->Update(dt);
         }
     }
+    sound->UpdateSound();
 }
 
 void Engine::Events()
@@ -272,14 +292,14 @@ bool Engine::Clean()
     m_FontManager->closeFont();
     delete m_FontManager;
     m_FontManager = nullptr;
-    
+
     player->Clean();
     delete player;
     player = nullptr;
 
     enemy->Clean();
     delete enemy;
-    enemy = nullptr; 
+    enemy = nullptr;
 
     menu->Clean();
     delete menu;

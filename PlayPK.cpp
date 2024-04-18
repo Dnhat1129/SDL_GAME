@@ -7,23 +7,25 @@
 #include "Engine.h"
 #include "Warrior.h"
 #include "Animation.h"
+#include <fstream>
+#include <sstream>
 
 PlayPK* PlayPK::s_Instance = nullptr;
 
 PlayPK::PlayPK() {
 	//choose and set 
-	PKList.push_back(PlayerPK(20000, 25, 3, 10, "goku.png", "goku_kame",  {375, 96, 70, 70} ));
-	PKList.push_back(PlayerPK(20000, 25, 3, 10, "gokussj.png", "ssj_kame", { 515, 96, 70, 70 }));
+	PKList.push_back(PlayerPK(20000, 25, 3, 10, 600, 75, "goku.png", "goku_kame.png",  {375, 96, 70, 70} ));
+	PKList.push_back(PlayerPK(20000, 25, 3, 10, 600, 75, "gokussj.png", "ssj_kame.png", { 515, 96, 70, 70 }));
 
-	PKList.push_back(PlayerPK(20000, 25, 3, 7, "fide1.png", "skill_fide1", { 306, 192, 70, 70 }));
-	PKList.push_back(PlayerPK(20000, 25, 3, 7, "fide2.png", "skill_fide2", { 445, 192, 70, 70 }));
-	PKList.push_back(PlayerPK(20000, 25, 3, 7, "fide3.png", "skill_fide3", { 585, 192, 70, 70 }));
+	PKList.push_back(PlayerPK(20000, 25, 5, 7, 400, 150, "fide1.png", "skill_fide1.png", { 306, 192, 70, 70 }));
+	PKList.push_back(PlayerPK(20000, 25, 5, 7, 400, 150, "fide2.png", "skill_fide2.png", { 445, 192, 70, 70 }));
+	PKList.push_back(PlayerPK(20000, 25, 5, 7, 400, 150, "fide3.png", "skill_fide3.png", { 585, 192, 70, 70 }));
 
-	PKList.push_back(PlayerPK(20000, 25, 3, 7, "so1.png", "", { 198, 288, 70, 70 }));
-	PKList.push_back(PlayerPK(20000, 25, 3, 7, "so2.png", "", { 325, 288, 70, 70 }));
-	PKList.push_back(PlayerPK(20000, 25, 3, 7, "so3.png", "", { 446, 288, 70, 70 }));
-	PKList.push_back(PlayerPK(20000, 25, 3, 7, "so4.png", "", { 565, 288, 70, 70 }));
-	PKList.push_back(PlayerPK(20000, 25, 3, 7, "tdt.png", "tdt_skill", { 682, 288, 70, 70 }));
+	PKList.push_back(PlayerPK(20000, 25, 5, 7, 400, 75, "so1.png", "", { 198, 288, 70, 70 }));
+	PKList.push_back(PlayerPK(20000, 25, 5, 7, 400, 75, "so2.png", "", { 325, 288, 70, 70 }));
+	PKList.push_back(PlayerPK(20000, 25, 5, 7, 400, 75, "so3.png", "", { 446, 288, 70, 70 }));
+	PKList.push_back(PlayerPK(20000, 25, 5, 7, 400, 75, "so4.png", "", { 565, 288, 70, 70 }));
+	PKList.push_back(PlayerPK(20000, 25, 5, 7, 200, 75, "tdt.png", "tdt_skill.png", { 682, 288, 70, 70 }));
 
 	checkback = 0;
 	checkstart = 0;
@@ -54,6 +56,7 @@ PlayPK::PlayPK() {
 	p1_time_skill = 0;
 	p1_skill_frame = 5;
 	p1_attack_frame = 10;
+	p1_currentframe = 0;
 	kc1 = 64;
 
 	chon1 = 0;
@@ -97,6 +100,7 @@ PlayPK::PlayPK() {
 	p2_time_skill = 0;
 	p2_skill_frame = 5;
 	p2_attack_frame = 10;
+	p2_currentframe = 0;
 	kc2 = 64;
 
 	chon2 = 0;
@@ -115,15 +119,16 @@ PlayPK::PlayPK() {
 	p2_skill_Animation = new Animation();
 
 	Cam = new Point((p1_Origin->X + p2_Origin->X) / 2, (p1_Origin->Y + p2_Origin->Y) / 2);
+	delay = 0;
 }
 
-void PlayPK::UpdateModePK() {
+void PlayPK::UpdateModePK(float dt) {
 	Vector2D Cam = Camera::GetInstance()->GetPosition();
 
 	if (Input::GetInstance()->ListenMouse(Back)) checkback = 1;
 	else checkback = 0;
 	if (checkback || checkstart) return;
-	if (!chon1 && !chon2) {
+	if (!chon1) {
 		for (int i = 0; i < PKList.size(); i++) {
 			if (Input::GetInstance()->ListenMouse(PKList[i].choose)) {
 				p1_HP = PKList[i].HP;
@@ -132,15 +137,22 @@ void PlayPK::UpdateModePK() {
 				p1_attack_frame = PKList[i].attack_frame;
 				p1_path = PKList[i].Path;
 				p1_skill_path = PKList[i].skill_path;
-				chon1 = 1;
+				p1_skill_width = PKList[i].skill_frame_width;
+				p1_skill_height = PKList[i].skill_frame_height;
+				
 				p1_choose = PKList[i].choose;
+				delay += dt;
+				if (delay > 10) {
+					chon1 = 1;
+					delay = 0;
+				}
 			}
 		}
 	}
 
-	TextureManager::GetInstance()->Draw("muiten1", Cam.X + p1_choose.x, p1_choose.y - 70, 70, 50);
+	
 
-	if (!chon2) {
+	else if (!chon2) {
 		for (int i = 0; i < PKList.size(); i++) {
 			if (Input::GetInstance()->ListenMouse(PKList[i].choose)) {
 				p2_HP = PKList[i].HP;
@@ -150,66 +162,81 @@ void PlayPK::UpdateModePK() {
 				p2_path = PKList[i].Path;
 				p2_skill_path = PKList[i].skill_path;
 				p2_choose = PKList[i].choose;
+				p2_skill_width = PKList[i].skill_frame_width;
+				p2_skill_height = PKList[i].skill_frame_height;
 
-				chon2 = 1;
-				chon1 = 0;
+				delay += dt;
+				if (delay > 10) {
+					chon2 = 1;
+					chon1 = 0;
+					delay = 0;
+				}
 			}
 		}
 	}
-
+	TextureManager::GetInstance()->Draw("muiten1", Cam.X + p1_choose.x, p1_choose.y - 70, 70, 50);
 	TextureManager::GetInstance()->Draw("muiten2", Cam.X + p2_choose.x, p2_choose.y - 70, 70, 50);
 
-	if (!chon1 && chon2) {
+	if ((!chon1 && chon2) || (chon1 && !chon2) || (chon1 && chon2)) {
 		if (Input::GetInstance()->ListenMouse(Start)) {
 			checkstart = 1;
 		}
 		else checkstart = 0;
 	}
-	std::cout << chon1 << " " << chon2 << std::endl;
 }
 
 void PlayPK::Draw() {
 	//player1
 	if (Input::GetInstance()->GetKeyDown(SDL_SCANCODE_K) && p1_time_skill >= 0) {
-		if (p1_time_skill >= 0 && p1_time_skill <= 240) p1_skill_frame = 0;
-		else if (p1_time_skill > 240 && p1_time_skill <= 480) p1_skill_frame = 1;
-		else if (p1_time_skill > 480 && p1_time_skill <= 720) p1_skill_frame = 2;
-		else {
-			p1_skill_frame = -1;
-			TextureManager::GetInstance()->Drop("player1_skill");
-			p1_Animation->Draw(p1_Transform->X, p1_Transform->Y, p1_Width, p1_Height, p1_Flip);
+		for (int i = 0; i < p1_skill_frame; i++) {
+			if (p1_time_skill >= i * 100 && p1_time_skill < (i+1)*100) p1_currentframe = i;
+			if (p1_time_skill >= p1_skill_frame * 100) p1_currentframe = -1;
 		}
-		if (p1_Flip == SDL_FLIP_NONE && p1_skill_frame >= 0)
-			p1_skill_Animation->DrawKame(p1_Transform->X, p1_Transform->Y, 600, p1_Height, p1_skill_frame, p1_Flip);
-		else p1_skill_Animation->DrawKame(p1_Transform->X - 540, p1_Transform->Y, 600, p1_Height, p1_skill_frame, p1_Flip);
+		if (p1_skill_height > 75) {
+			if (p1_Flip == SDL_FLIP_NONE && p1_currentframe >= 0)
+				p1_skill_Animation->DrawKame(p1_Transform->X, p1_Transform->Y - 75, p1_skill_width, p1_skill_height, p1_currentframe, p1_Flip);
+			else p1_skill_Animation->DrawKame(p1_Transform->X - (p1_skill_width - 60), p1_Transform->Y - 75, p1_skill_width, p1_skill_height, p1_currentframe, p1_Flip);
+		}
+		else {
+			if (p1_Flip == SDL_FLIP_NONE && p1_currentframe >= 0)
+				p1_skill_Animation->DrawKame(p1_Transform->X, p1_Transform->Y, p1_skill_width, p1_skill_height, p1_currentframe, p1_Flip);
+			else p1_skill_Animation->DrawKame(p1_Transform->X - (p1_skill_width - 60), p1_Transform->Y, p1_skill_width, p1_skill_height, p1_currentframe, p1_Flip);
+		}
 	}
 	else p1_Animation->Draw(p1_Transform->X, p1_Transform->Y, p1_Width, p1_Height, p1_Flip);
 
-	float vitri_khung1 = Cam->X-480;
+	float vitri_khung1 = 0;
+	if (Cam->X <= 480) vitri_khung1 = 0;
+	else if (Cam->X > 480 && Cam->X <= 1440) vitri_khung1 = Cam->X - 480;
+	else vitri_khung1 = 960;
 	TextureManager::GetInstance()->Draw("P1HPMN", static_cast<int>(vitri_khung1), 0, 205, 150);
 	int vitri_hp1 = 1.0 * p1_HP / p1_max_HP * 150; if (vitri_hp1 > 150) vitri_hp1 = 150;
 	TextureManager::GetInstance()->Draw("P1HP", static_cast<int>(vitri_khung1) + 43, 12, vitri_hp1, 25);
 	TextureManager::GetInstance()->Draw("P1MN", static_cast<int>(vitri_khung1) + 43, 47, 137, 12);
 	//player2
 	if (Input::GetInstance()->GetKeyDown(SDL_SCANCODE_KP_2) && p2_time_skill >= 0) {
-		if (p2_time_skill >= 0 && p2_time_skill <= 240) p2_skill_frame = 0;
-		else if (p2_time_skill > 240 && p2_time_skill <= 480) p2_skill_frame = 1;
-		else if (p2_time_skill > 480 && p1_time_skill <= 720) p2_skill_frame = 2;
-		else {
-			p2_skill_frame = -1;
-			TextureManager::GetInstance()->Drop("player2_skill");
-			p1_Animation->Draw(p2_Transform->X, p2_Transform->Y, p2_Width, p2_Height, p2_Flip);
+		for (int i = 0; i < p2_skill_frame; i++) {
+			if (p2_time_skill >= i * 100 && p2_time_skill < (i + 1) * 100) p2_currentframe = i;
+			if (p1_time_skill >= p2_skill_frame * 100) p2_currentframe = -1;
 		}
-		if (p2_Flip == SDL_FLIP_NONE && p2_skill_frame >= 0)
-			p2_skill_Animation->DrawKame(p2_Transform->X, p2_Transform->Y, 600, p2_Height, p2_skill_frame, p2_Flip);
-		else p2_skill_Animation->DrawKame(p2_Transform->X - 540, p2_Transform->Y, 600, p2_Height, p2_skill_frame, p2_Flip);
+
+		if (p2_skill_height > 75) {
+			if (p2_Flip == SDL_FLIP_NONE && p2_currentframe >= 0)
+				p2_skill_Animation->DrawKame(p2_Transform->X, p2_Transform->Y-75, p2_skill_width, p2_skill_height, p2_currentframe, p2_Flip);
+			else p2_skill_Animation->DrawKame(p2_Transform->X - (p2_skill_width - 60), p2_Transform->Y-75, p2_skill_width, p2_skill_height, p2_currentframe, p2_Flip);
+		}
+		else {
+			if (p2_Flip == SDL_FLIP_NONE && p2_currentframe >= 0)
+				p2_skill_Animation->DrawKame(p2_Transform->X, p2_Transform->Y, p2_skill_width, p2_skill_height, p2_currentframe, p2_Flip);
+			else p2_skill_Animation->DrawKame(p2_Transform->X - (p2_skill_width - 60), p2_Transform->Y, p2_skill_width, p2_skill_height, p2_currentframe, p2_Flip);
+		}
 	}
 	else p2_Animation->Draw(p2_Transform->X, p2_Transform->Y, p2_Width, p2_Height, p2_Flip);
 
 	float vitri_khung2 = vitri_khung1 + 755;
 	TextureManager::GetInstance()->Draw("P2HPMN", static_cast<int>(vitri_khung2), 0, 205, 70,SDL_FLIP_HORIZONTAL);
-	int vitri_hp2 = 1.0 * p1_HP / p1_max_HP * 150; if (vitri_hp2 > 150) vitri_hp2 = 150;
-	TextureManager::GetInstance()->Draw("P2HP", static_cast<int>(vitri_khung2) + 10, 10, vitri_hp2, 25, SDL_FLIP_HORIZONTAL);
+	int vitri_hp2 = 1.0 * p2_HP / p2_max_HP * 150; if (vitri_hp2 > 150) vitri_hp2 = 150;
+	TextureManager::GetInstance()->Draw("P2HP", static_cast<int>(vitri_khung2) + 10 + 150-vitri_hp2, 10, vitri_hp2, 25, SDL_FLIP_HORIZONTAL);
 	TextureManager::GetInstance()->Draw("P2MN", static_cast<int>(vitri_khung2) + 22, 47, 137, 12, SDL_FLIP_HORIZONTAL);
 }
 
@@ -256,12 +283,12 @@ void PlayPK::Update(float dt) {
 			p1_IsSkill = false;
 		}
 		if (Input::GetInstance()->GetKeyDown(SDL_SCANCODE_K) && !p1_IsDie && p1_time_skill >= 0) {
-			p1_skill_Animation->SetProps("player1_skill", 0, 3, 5500);
+			p1_skill_Animation->SetProps("player1_skill", 0, p1_skill_frame, 5500);
 			p1_time_skill += dt;
 			p1_IsSkill = true;
 
-			if (p1_time_skill > 720) {
-				p1_time_skill = -999;
+			if (p1_time_skill >= p1_skill_frame * 100) {
+				p1_time_skill = -200* p1_skill_frame;
 			}
 		}
 		else p1_IsSkill = false;
@@ -271,15 +298,16 @@ void PlayPK::Update(float dt) {
 				p1_Time += dt;
 				if (p1_Time > 5) {
 					p1_Time = 0;
-					p1_HP -= p2_dame;
+					p1_HP -= 2*p2_dame;
 					if (p2_Flip == SDL_FLIP_NONE) p1_RigidBody->ApplyForceX(2 * FORWARD);
 					else if (p2_Flip == SDL_FLIP_HORIZONTAL) p1_RigidBody->ApplyForceX(2 * BACKWARD);
 					p1_RigidBody->Update(dt);
 				}
 		}
 
-		if (p2_IsSkill && abs(p1_Transform->X - p2_Transform->X) <= p2_skill_width && abs(p1_Transform->Y - p2_Transform->Y) <= p2_skill_height) {
-				p1_HP -= 5 * p2_dame;
+		if (p2_IsSkill && abs(p1_Transform->X - p2_Transform->X) <= p2_skill_width 
+			&& abs(p1_Transform->Y - p2_Transform->Y) <= p2_skill_height && p2_currentframe == p2_skill_frame - 1) {
+				p1_HP -= 2*p2_dame;
 				if (p2_Flip == SDL_FLIP_NONE) p1_RigidBody->ApplyForceX(5 * FORWARD);
 				else if (p2_Flip == SDL_FLIP_HORIZONTAL) p1_RigidBody->ApplyForceX(5 * BACKWARD);
 				p1_RigidBody->Update(dt);
@@ -349,10 +377,10 @@ void PlayPK::Update(float dt) {
 		}
 
 		//Check vuot ra khoi map
-		if (p1_Transform->X < 0 || p1_Transform->X + p1_Width > 1920) {
+		if (p1_Transform->X < 5 || p1_Transform->X + p1_Width > 1915) {
 			p1_Transform->X = p1_LastSafePosition.X;
 		}
-		if (p1_Transform->Y < 0 || p1_Transform->Y + p1_Height > 640) {
+		if (p1_Transform->Y < 5 || p1_Transform->Y + p1_Height > 635) {
 			p1_Transform->Y = p1_LastSafePosition.Y;
 		}
 	}
@@ -403,13 +431,13 @@ void PlayPK::Update(float dt) {
 			p2_time_skill += dt;
 			p2_IsSkill = false;
 		}
-		if (Input::GetInstance()->GetKeyDown(SDL_SCANCODE_KP_2) && !p2_IsDie && p2_time_skill >= 0) {
-			p2_skill_Animation->SetProps("player2_skill", 0, 3, 5500);
+		if (Input::GetInstance()->GetKeyDown(SDL_SCANCODE_KP_2) && !p1_IsDie && p2_time_skill >= 0) {
+			p2_skill_Animation->SetProps("player2_skill", 0, p2_skill_frame, 5500);
 			p2_time_skill += dt;
 			p2_IsSkill = true;
 
-			if (p2_time_skill > 720) {
-				p2_time_skill = -999;
+			if (p2_time_skill >= p2_skill_frame * 100) {
+				p2_time_skill = -200 * p2_skill_frame;
 			}
 		}
 		else p2_IsSkill = false;
@@ -426,8 +454,9 @@ void PlayPK::Update(float dt) {
 				}
 		}
 
-		if (p1_IsSkill && abs(p1_Transform->X - p2_Transform->X) <= p1_skill_width && abs(p1_Transform->Y - p2_Transform->Y) <= p1_skill_height) {
-				p2_HP -= 5 * p1_dame;
+		if (p1_IsSkill && abs(p1_Transform->X - p2_Transform->X) <= p1_skill_width 
+			&& abs(p1_Transform->Y - p2_Transform->Y) <= p1_skill_height && p1_currentframe == p1_skill_frame-1) {
+				p2_HP -= p1_dame;
 				if (p1_Flip == SDL_FLIP_NONE) p2_RigidBody->ApplyForceX(5 * FORWARD);
 				else if (p1_Flip == SDL_FLIP_HORIZONTAL) p2_RigidBody->ApplyForceX(5 * BACKWARD);
 				p2_RigidBody->Update(dt);
@@ -497,10 +526,10 @@ void PlayPK::Update(float dt) {
 		}
 
 		//Check vuot ra khoi map
-		if (p2_Transform->X < 0 || p2_Transform->X + p2_Width > 1920) {
+		if (p2_Transform->X < 5 || p2_Transform->X + p2_Width > 1915) {
 			p2_Transform->X = p2_LastSafePosition.X;
 		}
-		if (p2_Transform->Y < 0 || p2_Transform->Y + p2_Height > 640) {
+		if (p2_Transform->Y < 5 || p2_Transform->Y + p2_Height > 635) {
 			p2_Transform->Y = p2_LastSafePosition.Y;
 		}
 	}
@@ -512,7 +541,10 @@ void PlayPK::Update(float dt) {
 
 	Cam->X = (p1_Origin->X + p2_Origin->X) / 2;
 	Cam->Y = (p1_Origin->Y + p2_Origin->Y) / 2;
-	//std::cout << p2_HP << p2_IsDie << std::endl;
+
+	std::cout << Cam->X << " " << Cam->Y << std::endl;
+
+	std::cout << p2_currentframe <<" " << p1_time_skill << std::endl;
 }
 
 void PlayPK::AnimationState(std::string id) {
@@ -608,4 +640,66 @@ void PlayPK::Clean() {
 	TextureManager::GetInstance()->Drop("P2HPMN");
 	TextureManager::GetInstance()->Drop("P2HP");
 	TextureManager::GetInstance()->Drop("P2MN");
+}
+
+void PlayPK::Luu() {
+	std::ofstream out("LamGame/PK.txt");
+	if (out.is_open()) {
+		out << p1_Transform->X << std::endl << p1_Transform->Y << std::endl;
+		out << p1_HP << std::endl << p1_MN << std::endl << p1_dame << std::endl;
+		out << p1_IsSkill << std::endl << p1_time_skill << std::endl;
+		out << p1_skill_frame << std::endl << p1_attack_frame << std::endl;
+		out << p1_path << std::endl << p1_skill_path << std::endl;
+		out << p1_skill_width << std::endl << p1_skill_height << std::endl;
+
+		out << p2_Transform->X << std::endl << p2_Transform->Y << std::endl;
+		out << p2_HP << std::endl << p2_MN << std::endl << p2_dame << std::endl;
+		out << p2_IsSkill << std::endl << p2_time_skill << std::endl;
+		out << p2_skill_frame << std::endl << p2_attack_frame << std::endl;
+		out << p2_path << std::endl << p2_skill_path << std::endl;
+		out << p2_skill_width << std::endl << p2_skill_height << std::endl;
+	}
+	out.close();
+
+}
+
+void PlayPK::SetContinue() {
+	std::ifstream in("LamGame/PK.txt");
+	std::string line;
+	std::string value;
+	int dem = 0;
+	while (std::getline(in, line)) {
+		dem++;
+		std::stringstream iss(line);
+		switch (dem) {
+		case 1: iss >> p1_Transform->X; break;
+		case 2: iss >> p1_Transform->Y; break;
+		case 3: iss >> p1_HP; break;
+		case 4: iss >> p1_MN; break;
+		case 5: iss >> p1_dame; break;
+		case 6: iss >> p1_IsSkill; break;
+		case 7: iss >> p1_time_skill; break;
+		case 8: iss >> p1_skill_frame; break;
+		case 9: iss >> p1_attack_frame; break;
+		case 10: iss >> p1_path; break;
+		case 11: iss >> p1_skill_path; break;
+		case 12: iss >> p1_skill_width; break;
+		case 13: iss >> p1_skill_height; break;
+
+		case 14: iss >> p2_Transform->X; break;
+		case 15: iss >> p2_Transform->Y; break;
+		case 16: iss >> p2_HP; break;
+		case 17: iss >> p2_MN; break;
+		case 18: iss >> p2_dame; break;
+		case 19: iss >> p2_IsSkill; break;
+		case 20: iss >> p2_time_skill; break;
+		case 21: iss >> p2_skill_frame; break;
+		case 22: iss >> p2_attack_frame; break;
+		case 23: iss >> p2_path; break;
+		case 24: iss >> p2_skill_path; break;
+		case 25: iss >> p2_skill_width; break;
+		case 26: iss >> p2_skill_height; break;
+		default: break;
+		}
+	}
 }
