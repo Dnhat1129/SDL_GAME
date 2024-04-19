@@ -78,6 +78,7 @@ bool Engine::Init()
     boss->Load();
     playPK->Load();
 
+    playPK->SetPrevious();
 
     TextureManager::GetInstance()->Load("bg1", "LamGame/Picture/Bg/background0.png");
     TextureManager::GetInstance()->Load("bg2", "LamGame/Picture/Bg/rock.png");
@@ -244,6 +245,8 @@ void Engine::Update()
         gameoverlose = false;
         updatescore = false;
         goldplay = 0;
+        playPK->SetPrevious();
+        Engine::GetPrevious();
     }
 
     if (gameoverlose || gameoverwin) {
@@ -330,6 +333,9 @@ void Engine::Update()
             }
             Camera::GetInstance()->Update(dt);
         }
+    }
+    else if (menu->GetModePK()) {
+        playPK->Luu();
     }
     else if (menu->GetPK()) {
 

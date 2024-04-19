@@ -228,9 +228,9 @@ void PlayPK::UpdateModePK(float dt) {
 		}
 		else checkstart = 0;
 	}
-	
 	if (chon1 && chon2) {
 		chon1 = false;
+		chon2 = false;
 	}
 }
 
@@ -647,9 +647,6 @@ void PlayPK::AnimationState(std::string id) {
 		if (p2_IsAttacking) {
 			p2_Animation->SetProps(id, 4, p2_attack_frame, 50);
 		}
-		//if (p2_IsDie) {
-			//p2_Animation->SetProps(id, 5, 1, 100);
-		//}
 	}
 }
 
@@ -689,30 +686,32 @@ void PlayPK::Clean() {
 }
 
 void PlayPK::Luu() {
-	std::ofstream out("LamGame/PK.txt");
-	if (out.is_open()) {
-		out << p1_Transform->X << std::endl << p1_Transform->Y << std::endl;
-		out << p1_HP << std::endl << p1_MN << std::endl << p1_dame << std::endl;
-		out << p1_IsSkill << std::endl << p1_time_skill << std::endl;
-		out << p1_skill_frame << std::endl << p1_attack_frame << std::endl;
-		out << p1_path << std::endl << p1_skill_path << std::endl;
-		out << p1_skill_width << std::endl << p1_skill_height << std::endl;
+	if (Engine::GetInstance()->GetMenu()->GetPK()) {
+		std::ofstream out("LamGame/PK.txt");
+		if (out.is_open()) {
+			out << p1_Transform->X << std::endl << p1_Transform->Y << std::endl;
+			out << p1_HP << std::endl << p1_MN << std::endl << p1_dame << std::endl;
+			out << p1_IsSkill << std::endl << p1_time_skill << std::endl;
+			out << p1_skill_frame << std::endl << p1_attack_frame << std::endl;
+			out << p1_path << std::endl << p1_skill_path << std::endl;
+			out << p1_skill_width << std::endl << p1_skill_height << std::endl;
 
-		out << p2_Transform->X << std::endl << p2_Transform->Y << std::endl;
-		out << p2_HP << std::endl << p2_MN << std::endl << p2_dame << std::endl;
-		out << p2_IsSkill << std::endl << p2_time_skill << std::endl;
-		out << p2_skill_frame << std::endl << p2_attack_frame << std::endl;
-		out << p2_path << std::endl << p2_skill_path << std::endl;
-		out << p2_skill_width << std::endl << p2_skill_height << std::endl;
+			out << p2_Transform->X << std::endl << p2_Transform->Y << std::endl;
+			out << p2_HP << std::endl << p2_MN << std::endl << p2_dame << std::endl;
+			out << p2_IsSkill << std::endl << p2_time_skill << std::endl;
+			out << p2_skill_frame << std::endl << p2_attack_frame << std::endl;
+			out << p2_path << std::endl << p2_skill_path << std::endl;
+			out << p2_skill_width << std::endl << p2_skill_height << std::endl;
+		}
+		out.close();
 	}
-	out.close();
-	std::ofstream out2("LamGame/Picture/ModePK/Bought.txt");
-	if (out2.is_open()) {
-		out2 << PKList[0].Isbuy << std::endl << PKList[1].Isbuy << std::endl << PKList[2].Isbuy << std::endl;
-		out2 << PKList[3].Isbuy << std::endl << PKList[4].Isbuy << std::endl << PKList[5].Isbuy << std::endl;
-		out2 << PKList[6].Isbuy << std::endl << PKList[7].Isbuy << std::endl << PKList[8].Isbuy << std::endl;
-		out2 << PKList[9].Isbuy << std::endl;
-	}
+		std::ofstream out2("LamGame/Picture/ModePK/Bought.txt");
+		if (out2.is_open()) {
+			out2 << PKList[0].Isbuy << std::endl << PKList[1].Isbuy << std::endl << PKList[2].Isbuy << std::endl;
+			out2 << PKList[3].Isbuy << std::endl << PKList[4].Isbuy << std::endl << PKList[5].Isbuy << std::endl;
+			out2 << PKList[6].Isbuy << std::endl << PKList[7].Isbuy << std::endl << PKList[8].Isbuy << std::endl;
+			out2 << PKList[9].Isbuy << std::endl;
+		}
 }
 
 void PlayPK::SetContinue() {

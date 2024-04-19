@@ -30,7 +30,6 @@ public:
         checkcontinue = false;
         score = 0; updatescore = false;
         gold = 0; goldplay = 0;
-       // highscore[5] = {0,0,0,0,0};
     };
     static Engine* GetInstance() {
         if (s_Instance != nullptr)
