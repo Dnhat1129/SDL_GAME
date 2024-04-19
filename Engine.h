@@ -28,6 +28,9 @@ public:
         isMap1 = true; isMap2 = false;
         checkloadmap = false; checkloadmap = false;
         checkcontinue = false;
+        score = 0; updatescore = false;
+        gold = 0; goldplay = 0;
+       // highscore[5] = {0,0,0,0,0};
     };
     static Engine* GetInstance() {
         if (s_Instance != nullptr)
@@ -44,6 +47,8 @@ public:
     void Update();
     void Render();
     void Events();
+    void GetPrevious();
+    void Luu();
 
     inline GameMap* GetMap() { return m_LevelMap; }
     inline bool IsRunning() { return m_IsRunning; }
@@ -58,8 +63,10 @@ public:
 
     bool GetMap1() { return isMap1; } 
     bool GetMap2() { return isMap2; }
-    bool Getover() { return gameover; }
+    bool GetoverWin() { return gameoverwin; }
+    bool GetoverLose() { return gameoverlose; }
 
+    int GetGold() { return gold; }
 
 private:
     bool m_IsRunning = true;
@@ -80,7 +87,10 @@ private:
     bool isMap1; bool isMap2; 
     bool checkloadmap; bool checkloadmap2; int CurrentEnemy; int CurrentBoss;
     bool checkcontinue;
-    bool gameover;
+    bool gameoverwin, gameoverlose;
+    int score; bool updatescore;
+    int gold; int goldplay;
+    int highscore[5];
 };
 
 #endif // ENGINE_H

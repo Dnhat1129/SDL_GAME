@@ -3,7 +3,6 @@
 #include "Vector2D.h"
 #include "SDL.h"
 #include "Input.h"
-#include "Vector2D.h"
 
 class Menustage
 {
@@ -39,6 +38,9 @@ public:
 	bool GetNewgame() { return IsPauseNewgame; }
 
 	int GetVolume() { return volume; }
+	int Getismua() { return ismua; }
+
+	bool GetIsbxh() { return Isbxh; }
 
 private:
 	static Menustage* s_Instance;
@@ -47,13 +49,14 @@ private:
 	SDL_Rect Continue;
 	SDL_Rect nutpause;
 	SDL_Rect NewGame;
-	SDL_Rect LeaderBoards;
+	SDL_Rect LeaderBoards; SDL_Rect OK2;
 	SDL_Rect Options; SDL_Rect Op1; SDL_Rect OK;
 	SDL_Rect Credits;
 	SDL_Rect Exit;
 	SDL_Rect ModeStory; SDL_Rect ModePK;
 	SDL_Rect Yes;
 	SDL_Rect No;
+	SDL_Rect mua;
 
 private:
 	bool IsMenu; bool IsMode; bool IsModePK;
@@ -64,8 +67,10 @@ private:
 	bool IsContinue;
 	bool IsPauseNewgame;
 	bool IsOption;
+	bool Isbxh;
 
 	int volume;
+	int gold; bool ismua;
 	Vector2D Cam;
 };
 #endif

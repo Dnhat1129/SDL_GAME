@@ -88,7 +88,6 @@ void Warrior::Draw() {
 	int loaddau = 60;
 	if (time_dau_than < 0) loaddau = 1.0 * (600 - abs(time_dau_than)) / time_dau_than_max * 60;
 	TextureManager::GetInstance()->Draw("dau_than", static_cast<int>(vitri_dau_X) , static_cast<int> (vitri_dau_Y), 60, loaddau, SDL_FLIP_NONE);
-	std::cout << time_dau_than<<" " << loaddau << std::endl;
 	Vector2D cam = Camera::GetInstance()->GetPosition();
 	
 
@@ -397,7 +396,6 @@ void Warrior::Luu() {
 void Warrior::SetContinue() {
 	std::ifstream in("LamGame/Picture/Pause/player.txt");
 	std::string line;
-	std::string value;
 	int dem = 0;
 	while (std::getline(in, line)) {
 		dem++;

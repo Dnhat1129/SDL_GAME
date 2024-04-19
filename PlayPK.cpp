@@ -9,23 +9,24 @@
 #include "Animation.h"
 #include <fstream>
 #include <sstream>
+#include "Menustage.h"
 
 PlayPK* PlayPK::s_Instance = nullptr;
 
 PlayPK::PlayPK() {
 	//choose and set 
-	PKList.push_back(PlayerPK(20000, 25, 3, 10, 600, 75, "goku.png", "goku_kame.png",  {375, 96, 70, 70} ));
-	PKList.push_back(PlayerPK(20000, 25, 3, 10, 600, 75, "gokussj.png", "ssj_kame.png", { 515, 96, 70, 70 }));
+	PKList.push_back(PlayerPK(1, 0, 20000, 25, 3, 10, 600, 75, "goku.png", "goku_kame.png",  {375, 96, 70, 70} ));
+	PKList.push_back(PlayerPK(0, 5000, 20000, 25, 3, 10, 600, 75, "gokussj.png", "ssj_kame.png", { 515, 96, 70, 70 }));
 
-	PKList.push_back(PlayerPK(20000, 25, 5, 7, 400, 150, "fide1.png", "skill_fide1.png", { 306, 192, 70, 70 }));
-	PKList.push_back(PlayerPK(20000, 25, 5, 7, 400, 150, "fide2.png", "skill_fide2.png", { 445, 192, 70, 70 }));
-	PKList.push_back(PlayerPK(20000, 25, 5, 7, 400, 150, "fide3.png", "skill_fide3.png", { 585, 192, 70, 70 }));
+	PKList.push_back(PlayerPK(1, 0, 20000, 25, 5, 7, 400, 150, "fide1.png", "skill_fide1.png", { 306, 192, 70, 70 }));
+	PKList.push_back(PlayerPK(0, 3000, 20000, 25, 5, 7, 400, 150, "fide2.png", "skill_fide2.png", { 445, 192, 70, 70 }));
+	PKList.push_back(PlayerPK(0, 4000, 20000, 25, 5, 7, 400, 150, "fide3.png", "skill_fide3.png", { 585, 192, 70, 70 }));
 
-	PKList.push_back(PlayerPK(20000, 25, 5, 7, 400, 75, "so1.png", "", { 198, 288, 70, 70 }));
-	PKList.push_back(PlayerPK(20000, 25, 5, 7, 400, 75, "so2.png", "", { 325, 288, 70, 70 }));
-	PKList.push_back(PlayerPK(20000, 25, 5, 7, 400, 75, "so3.png", "", { 446, 288, 70, 70 }));
-	PKList.push_back(PlayerPK(20000, 25, 5, 7, 400, 75, "so4.png", "", { 565, 288, 70, 70 }));
-	PKList.push_back(PlayerPK(20000, 25, 5, 7, 200, 75, "tdt.png", "tdt_skill.png", { 682, 288, 70, 70 }));
+	PKList.push_back(PlayerPK(0, 1000, 20000, 25, 5, 7, 400, 75, "so1.png", "", { 198, 288, 70, 70 }));
+	PKList.push_back(PlayerPK(0, 1200, 20000, 25, 5, 7, 400, 75, "so2.png", "", { 325, 288, 70, 70 }));
+	PKList.push_back(PlayerPK(0, 1400, 20000, 25, 5, 7, 400, 75, "so3.png", "", { 446, 288, 70, 70 }));
+	PKList.push_back(PlayerPK(0, 1500, 20000, 25, 5, 7, 400, 75, "so4.png", "", { 565, 288, 70, 70 }));
+	PKList.push_back(PlayerPK(0, 1600, 20000, 25, 5, 7, 200, 75, "tdt.png", "tdt_skill.png", { 682, 288, 70, 70 }));
 
 	checkback = 0;
 	checkstart = 0;
@@ -120,6 +121,7 @@ PlayPK::PlayPK() {
 
 	Cam = new Point((p1_Origin->X + p2_Origin->X) / 2, (p1_Origin->Y + p2_Origin->Y) / 2);
 	delay = 0;
+	luugia = 0;
 }
 
 void PlayPK::UpdateModePK(float dt) {
@@ -140,18 +142,18 @@ void PlayPK::UpdateModePK(float dt) {
 				p1_skill_width = PKList[i].skill_frame_width;
 				p1_skill_height = PKList[i].skill_frame_height;
 				
+				p1_Isbuy = PKList[i].Isbuy;
 				p1_choose = PKList[i].choose;
+				luugia = PKList[i].Gia;
+
 				delay += dt;
-				if (delay > 10) {
+				if (delay > 20) {
 					chon1 = 1;
 					delay = 0;
 				}
 			}
 		}
 	}
-
-	
-
 	else if (!chon2) {
 		for (int i = 0; i < PKList.size(); i++) {
 			if (Input::GetInstance()->ListenMouse(PKList[i].choose)) {
@@ -161,12 +163,15 @@ void PlayPK::UpdateModePK(float dt) {
 				p2_attack_frame = PKList[i].attack_frame;
 				p2_path = PKList[i].Path;
 				p2_skill_path = PKList[i].skill_path;
-				p2_choose = PKList[i].choose;
 				p2_skill_width = PKList[i].skill_frame_width;
 				p2_skill_height = PKList[i].skill_frame_height;
 
+				luugia = PKList[i].Gia;
+				p2_Isbuy = PKList[i].Isbuy;
+				p2_choose = PKList[i].choose;
+
 				delay += dt;
-				if (delay > 10) {
+				if (delay > 20) {
 					chon2 = 1;
 					chon1 = 0;
 					delay = 0;
@@ -174,14 +179,51 @@ void PlayPK::UpdateModePK(float dt) {
 			}
 		}
 	}
+
+	FontManager* font = Engine::GetInstance()->GetFont();
+	SDL_Color textColor = { 255, 255, 0, 255 };
+	if (font->isFontLoaded()) {
+		SDL_Texture* textTexture = font->renderText(std::to_string(luugia), textColor, font->getFont(), Engine::GetInstance()->GetRenderer());
+		if (textTexture) {
+			SDL_Rect customRect = { Cam.X + 342, 582, 30, 30 };
+			SDL_RenderCopy(Engine::GetInstance()->GetRenderer(), textTexture, NULL, &customRect);
+			SDL_DestroyTexture(textTexture);
+		}
+	}
+
 	TextureManager::GetInstance()->Draw("muiten1", Cam.X + p1_choose.x, p1_choose.y - 70, 70, 50);
 	TextureManager::GetInstance()->Draw("muiten2", Cam.X + p2_choose.x, p2_choose.y - 70, 70, 50);
 
-	if ((!chon1 && chon2) || (chon1 && !chon2) || (chon1 && chon2)) {
-		if (Input::GetInstance()->ListenMouse(Start)) {
+	if ((!chon1 && chon2) || (chon1 && !chon2) || (chon1 && chon2) || (p1_Isbuy && p2_Isbuy) ) {
+
+		if ((!p1_Isbuy || !p2_Isbuy) && delay > 0 && delay <= 20 && Input::GetInstance()->ListenMouse(Start)) {
+			FontManager* font = Engine::GetInstance()->GetFont();
+			SDL_Color textColor = { 255, 0, 0, 255 };
+			if (font->isFontLoaded()) {
+				SDL_Texture* textTexture = font->renderText("YOU HAVEN'T PURCHASED THIS CHARACTER YET", textColor, font->getFont(), Engine::GetInstance()->GetRenderer());
+				if (textTexture) {
+					SDL_Rect customRect = { 270, 400, 400, 50 };
+					SDL_RenderCopy(Engine::GetInstance()->GetRenderer(), textTexture, NULL, &customRect);
+					SDL_DestroyTexture(textTexture);
+				}
+			}
+			checkstart = 0;
+			return;
+		}
+
+		else if (Input::GetInstance()->ListenMouse(Start) && p1_Isbuy && p2_Isbuy) {
 			checkstart = 1;
 		}
 		else checkstart = 0;
+	}
+	if (Engine::GetInstance()->GetMenu()->Getismua()) {
+		for (int i = 0; i < PKList.size(); i++) {
+			if (PKList[i].Gia == luugia) {
+				PKList[i].Gia = 0;
+				PKList[i].Isbuy = 1;
+				break;
+			}
+		}
 	}
 }
 
@@ -657,13 +699,18 @@ void PlayPK::Luu() {
 		out << p2_skill_width << std::endl << p2_skill_height << std::endl;
 	}
 	out.close();
-
+	std::ofstream out2("LamGame/Picture/ModePK/Bought.txt");
+	if (out2.is_open()) {
+		out2 << PKList[0].Isbuy << std::endl << PKList[1].Isbuy << std::endl << PKList[2].Isbuy << std::endl;
+		out2 << PKList[3].Isbuy << std::endl << PKList[4].Isbuy << std::endl << PKList[5].Isbuy << std::endl;
+		out2 << PKList[6].Isbuy << std::endl << PKList[7].Isbuy << std::endl << PKList[8].Isbuy << std::endl;
+		out2 << PKList[9].Isbuy << std::endl;
+	}
 }
 
 void PlayPK::SetContinue() {
 	std::ifstream in("LamGame/PK.txt");
 	std::string line;
-	std::string value;
 	int dem = 0;
 	while (std::getline(in, line)) {
 		dem++;
@@ -699,4 +746,29 @@ void PlayPK::SetContinue() {
 		default: break;
 		}
 	}
+	in.close();
+}
+
+void PlayPK::SetPrevious() {
+	std::ifstream in("LamGame/ModePK/Bought.txt");
+	std::string line;
+	int dem = 0;
+	while (std::getline(in, line)) {
+		dem++;
+		std::stringstream iss(line);
+		switch (dem) {
+		case 1: iss >> PKList[0].Isbuy; break;
+		case 2: iss >> PKList[1].Isbuy; break;
+		case 3: iss >> PKList[2].Isbuy; break;
+		case 4: iss >> PKList[3].Isbuy; break;
+		case 5: iss >> PKList[4].Isbuy; break;
+		case 6: iss >> PKList[5].Isbuy; break;
+		case 7: iss >> PKList[6].Isbuy; break;
+		case 8: iss >> PKList[7].Isbuy; break;
+		case 9: iss >> PKList[8].Isbuy; break;
+		case 10: iss >> PKList[9].Isbuy; break;
+		default: break;
+		}
+	}
+	in.close();
 }

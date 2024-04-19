@@ -37,6 +37,8 @@ class Warrior : public GameObject {
         bool GetIsKame() { return m_IsKame; }
         bool GetIsRunning() { return m_IsRunning; }
 
+        int Getdauthan() { return dau_than; }
+
         void Reset() {
             m_Transform->X = 100;
             m_Transform->Y = 100;

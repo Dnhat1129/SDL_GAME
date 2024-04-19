@@ -11,8 +11,8 @@
 #include "SDL.h"
 
 
-
 struct PlayerPK {
+    bool Isbuy; int Gia;
     int HP;
     int Dame;
     int skill_frame, attack_frame;
@@ -20,8 +20,8 @@ struct PlayerPK {
     std::string Path, skill_path;
     SDL_Rect choose;
 
-    PlayerPK(int hp = 0, int dame = 0, int skillframe = 0, int attackframe = 0, int skillframewidth = 0, int skillframeheight = 0, std::string path = "", std::string skillpath = "", SDL_Rect chose = { 0,0,0,0 }) :
-        HP(hp), Dame(dame), skill_frame(skillframe), attack_frame(attackframe), skill_frame_width(skillframewidth), skill_frame_height(skillframeheight), Path(path), skill_path(skillpath), choose(chose) {}
+    PlayerPK(bool isbuy = 0, int gia = 0, int hp = 0, int dame = 0, int skillframe = 0, int attackframe = 0, int skillframewidth = 0, int skillframeheight = 0, std::string path = "", std::string skillpath = "", SDL_Rect chose = { 0,0,0,0 }) :
+        Isbuy(isbuy), Gia(gia), HP(hp), Dame(dame), skill_frame(skillframe), attack_frame(attackframe), skill_frame_width(skillframewidth), skill_frame_height(skillframeheight), Path(path), skill_path(skillpath), choose(chose) {}
 };
 
 class PlayPK
@@ -42,6 +42,7 @@ public:
     void UpdateModePK(float dt);
     void Luu();
     void SetContinue();
+    void SetPrevious();
 
     Point* GetOrigin() { return Cam; }
     bool Checkback() { return checkback; }
@@ -58,6 +59,8 @@ public:
     bool GetIsAttacking() { return p1_IsAttacking || p2_IsAttacking; }
     bool GetIsSkill() { return p1_IsSkill || p2_IsSkill; }
 
+    int Getluugia() { return luugia; }
+
     void AnimationState(std::string id);
     
 private:
@@ -69,6 +72,7 @@ private:
     SDL_Rect Start = { 430, 582, 85, 35 }; bool checkstart;
     std:: vector <PlayerPK> PKList;
     float delay;
+    int luugia;
 
 //player1
 private: 
@@ -92,6 +96,7 @@ private:
     int kc1;
     int p1_skill_width;
     int p1_skill_height;
+    bool p1_Isbuy;
 
     bool p1_IsSkill; int p1_skill_frame, p1_attack_frame; int p1_currentframe;
     float p1_time_skill;
@@ -130,6 +135,7 @@ private:
     int kc2;
     int p2_skill_width;
     int p2_skill_height;
+    bool p2_Isbuy;
 
     bool p2_IsSkill; int p2_skill_frame, p2_attack_frame; int p2_currentframe;
     float p2_time_skill;

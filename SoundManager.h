@@ -9,7 +9,6 @@
 class SoundManager {
 public:
     SoundManager();
-    ~SoundManager();
 
     static SoundManager* GetInstance() {
         if (s_Instance != nullptr)
@@ -19,7 +18,6 @@ public:
     }
     void loadSound(const char* filePath, const char* soundName);
     void playSound(const char* soundName);
-    void stopSound(const char* soundName);
     void setVolume(int volume);
     void UpdateSound();
     void Load();
@@ -27,14 +25,13 @@ public:
 private:
     static SoundManager* s_Instance;
     std::map<std::string, Mix_Chunk*> soundEffects{
-        {"menu", nullptr},
         {"run", nullptr},
         {"attack", nullptr},
         {"kamehameha", nullptr},
         {"skill", nullptr }
 
     };
-    std::map<std::string, int> channels;
+    Mix_Music* music;
 };
 
 #endif // SOUNDMANAGER_H

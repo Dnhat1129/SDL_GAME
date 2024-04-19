@@ -14,6 +14,8 @@
 #include "CollisionHandler.h"
 #include "Boss.h"
 #include "PlayPK.h"
+#include <fstream>
+#include <algorithm>
 
 Engine* Engine::s_Instance = nullptr;
 
@@ -79,7 +81,6 @@ bool Engine::Init()
 
     TextureManager::GetInstance()->Load("bg1", "LamGame/Picture/Bg/background0.png");
     TextureManager::GetInstance()->Load("bg2", "LamGame/Picture/Bg/rock.png");
-    TextureManager::GetInstance()->Load("rong", "LamGame/Picture/Character/rong.png");
 
     Camera::GetInstance()->SetTarget(player->GetOrigin());
     return m_IsRunning = true;
@@ -91,7 +92,69 @@ void Engine::Render()
     SDL_SetRenderDrawColor(m_Renderer, 124, 218, 254, 255);
     SDL_RenderClear(m_Renderer);
 
-    if (menu->GetIsMenu() || menu->GetIsMode() || menu->GetModePK() || menu->GetPauseP() || menu->GetPauseS() || gameover) { menu->Draw(); }
+    if (menu->GetIsMenu() || menu->GetIsMode() || menu->GetModePK() || menu->GetPauseP() || menu->GetPauseS() || gameoverwin || gameoverlose) { 
+        menu->Draw(); 
+        if (gameoverwin || gameoverlose) {
+            SDL_Color textColor = { 255, 255, 0, 255 };
+            if (m_FontManager && m_FontManager->isFontLoaded()) {
+                SDL_Texture* textTexture1 = m_FontManager->renderText(std::to_string(goldplay), textColor, m_FontManager->getFont(), m_Renderer);
+                
+                if (textTexture1) {
+                    SDL_Rect customRect1 = { 455, 305, 40, 30 };
+                    SDL_RenderCopy(m_Renderer, textTexture1, NULL, &customRect1);
+                    SDL_DestroyTexture(textTexture1);
+                }
+                
+                SDL_Texture* textTexture2 = m_FontManager->renderText(std::to_string(score), textColor, m_FontManager->getFont(), m_Renderer);
+                if (textTexture2) {
+                    SDL_Rect customRect2 = { 455, 340, 40, 30 };
+                    SDL_RenderCopy(m_Renderer, textTexture2, NULL, &customRect2);
+                    SDL_DestroyTexture(textTexture2);
+                }
+            }
+        }
+    }
+
+    if (menu->GetIsbxh()) {
+        SDL_Color textColor = { 255, 255, 255, 255 };
+        if (m_FontManager && m_FontManager->isFontLoaded()) {
+            SDL_Texture* textTexture1 = m_FontManager->renderText(std::to_string(highscore[0]), textColor, m_FontManager->getFont(), Engine::GetInstance()->GetRenderer());
+            if (textTexture1) {
+                SDL_Rect customRect = { 390, 355, 50, 30 };
+                SDL_RenderCopy(Engine::GetInstance()->GetRenderer(), textTexture1, NULL, &customRect);
+                SDL_DestroyTexture(textTexture1);
+            }
+
+            SDL_Texture* textTexture2 = m_FontManager->renderText(std::to_string(highscore[1]), textColor, m_FontManager->getFont(), Engine::GetInstance()->GetRenderer());
+            if (textTexture2) {
+                SDL_Rect customRect = { 390, 380, 50, 30 };
+                SDL_RenderCopy(Engine::GetInstance()->GetRenderer(), textTexture2, NULL, &customRect);
+                SDL_DestroyTexture(textTexture2);
+            }
+
+            SDL_Texture* textTexture3 = m_FontManager->renderText(std::to_string(highscore[2]), textColor, m_FontManager->getFont(), Engine::GetInstance()->GetRenderer());
+            if (textTexture3) {
+                SDL_Rect customRect = { 390, 405, 50, 30 };
+                SDL_RenderCopy(Engine::GetInstance()->GetRenderer(), textTexture3, NULL, &customRect);
+                SDL_DestroyTexture(textTexture3);
+            }
+
+            SDL_Texture* textTexture4 = m_FontManager->renderText(std::to_string(highscore[3]), textColor, m_FontManager->getFont(), Engine::GetInstance()->GetRenderer());
+            if (textTexture4) {
+                SDL_Rect customRect = { 390, 430, 50, 30 };
+                SDL_RenderCopy(Engine::GetInstance()->GetRenderer(), textTexture4, NULL, &customRect);
+                SDL_DestroyTexture(textTexture4);
+            }
+
+            SDL_Texture* textTexture5 = m_FontManager->renderText(std::to_string(highscore[4]), textColor, m_FontManager->getFont(), Engine::GetInstance()->GetRenderer());
+            if (textTexture5) {
+                SDL_Rect customRect = { 390, 455, 50, 30 };
+                SDL_RenderCopy(Engine::GetInstance()->GetRenderer(), textTexture5, NULL, &customRect);
+                SDL_DestroyTexture(textTexture5);
+            }
+        }
+    }
+    
     if (menu->GetStory()) {
         TextureManager::GetInstance()->Draw("bg1", 0, 0, 1920, 1080);
         //map1
@@ -122,11 +185,6 @@ void Engine::Render()
         if (isMap2) {
             boss->Draw();
         }
-
-        //xong map 2
-        if (boss->GetComplete2() && !isMap1) {
-            TextureManager::GetInstance()->Draw("rong", 771, 0, 377, 512);
-        }
     }
     else if (menu->GetModePK()) {
         playPK->UpdateModePK(dt);
@@ -143,7 +201,8 @@ void Engine::Render()
 
 void Engine::Update()
 {
-    gameover = player->GetHP() <= 0;
+    gameoverlose = player->GetHP() <= 0;
+    gameoverwin = player->GetHP() > 0 && boss->GetComplete2();
     menu->Update();
     
     menu->UpdateStory();
@@ -180,11 +239,29 @@ void Engine::Update()
         delete playPK;
         playPK = tempplayPK;
 
-        gameover = false;
-
+        gameoverwin = false;
+        gameoverlose = false;
+        updatescore = false;
+        goldplay = 0;
     }
 
-    if (gameover) return;
+    if (gameoverlose || gameoverwin) {
+        if (!updatescore) {
+            score -= (10 - player->Getdauthan()) * 100;
+            gold += goldplay;
+            for (int i = 0; i < 5; i++) {
+                if (highscore[i] <= score) {
+                    highscore[i] = score;
+                    break;
+                }
+            }
+            std::sort(highscore, highscore + 5, [](int a, int b) {
+                return a > b;
+                });
+            }
+            updatescore = true;
+            return;
+    }
 
     if (menu->GetStory()) {
 
@@ -221,6 +298,8 @@ void Engine::Update()
                     tempEnemy->Load();
                     delete enemy;
                     enemy = tempEnemy;
+                    goldplay += 100;
+                    score += 1000;
                 }
                 enemy->Update(dt);
                 enemy->Luu();
@@ -241,6 +320,8 @@ void Engine::Update()
                     tempBoss->Load();
                     delete boss;
                     boss = tempBoss;
+                    goldplay += 200;
+                    score += 2000;
                 }
 
                 boss->Update(dt);
@@ -274,6 +355,7 @@ void Engine::Update()
             Camera::GetInstance()->Update(dt);
         }
     }
+    if (menu->Getismua()) gold -= playPK->Getluugia();
     sound->UpdateSound();
 }
 
@@ -319,4 +401,35 @@ bool Engine::Clean()
     IMG_Quit();
     SDL_Quit();
     return true;
+}
+
+void Engine::GetPrevious() {
+    std::ifstream in("LamGame/Picture/previous.txt");
+    std::string line;
+    int dem = 0;
+    while (std::getline(in, line)) {
+        dem++;
+        std::stringstream iss(line);
+        switch (dem) {
+        case 1: iss >> gold; break;
+        case 2: iss >> highscore[0]; break;
+        case 3: iss >> highscore[1]; break;
+        case 4: iss >> highscore[2]; break;
+        case 5: iss >> highscore[3]; break;
+        case 6: iss >> highscore[4]; break;
+        default: break;
+        }
+    }
+    in.close();
+}
+
+void Engine::Luu() {
+    std::ofstream out("LamGame/Picture/previous.txt");
+    out << gold << std::endl;
+    if (out.is_open()) {
+        for (int i = 0; i < 5; i++) {
+            out << highscore[i] << std::endl;
+        }
+    }
+    out.close();
 }
