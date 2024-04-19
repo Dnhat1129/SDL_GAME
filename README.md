@@ -1,4 +1,4 @@
-# SONGOKU ADVENTURE
+# ADVENTURE SONGOKU
 # Giới thiệu
 ●  Họ và tên: Đoàn Long Nhật
 
@@ -6,7 +6,7 @@
 
 ●  Lớp: K68 CD, Trường Đại học Công Nghệ, Đại học Quốc Gia Hà Nội.
 
-SONGOKU ADVENTURE là một câu chuyện lấy cảm hứng từ bộ truyện nổi tiếng Dragon Ball trong hành trình Songoku đi đến hành tinh Namek để tìm ngọc rồng hồi sinh cho những người bạn của mình. Ở Namek, Songoku phải đối mặt với đội quân Frieza hùng mạnh và phải trải qua nhiều khó khăn. Hãy hóa thân vào Songoku để đánh bại kẻ thù giành lại ngọc rồng.
+ADVENTURE SONGOKU là một câu chuyện lấy cảm hứng từ bộ truyện nổi tiếng Dragon Ball trong hành trình Songoku đi đến hành tinh Namek để tìm ngọc rồng hồi sinh cho những người bạn của mình. Ở Namek, Songoku phải đối mặt với đội quân Frieza hùng mạnh và phải trải qua nhiều khó khăn. Hãy hóa thân vào Songoku để đánh bại kẻ thù giành lại ngọc rồng.
 
 # Chi tiết
 ## Gameplay 
@@ -38,4 +38,12 @@ Game có hai chế độ là chế độ cốt truyệt và chế độ đối k
 
 ●  Ở chế độ đối kháng: Đây là chế độ 2 người chơi, 2 người chơi sẽ chọn nhân vật của mình và đối đầu nhau
 ## Một số hình ảnh trong game
-![example](Picture/PictureGame/menu.png)
+![mau](menu.png)
+![mau](map1.png)
+![mau](map2.png)
+![mau](rong.png)
+![mau](pause.png)
+![mau](pk1.png)
+![mau](pk2.png)
+![mau](over.png)
+
