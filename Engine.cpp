@@ -82,6 +82,7 @@ bool Engine::Init()
     TextureManager::GetInstance()->Load("bg1", "LamGame/Picture/Bg/background0.png");
     TextureManager::GetInstance()->Load("bg2", "LamGame/Picture/Bg/rock.png");
 
+    sound->playMusic();
     Camera::GetInstance()->SetTarget(player->GetOrigin());
     return m_IsRunning = true;
 }

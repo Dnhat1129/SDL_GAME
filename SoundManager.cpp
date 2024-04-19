@@ -8,7 +8,7 @@
 SoundManager* SoundManager::s_Instance = nullptr;
 
 SoundManager::SoundManager() {
-    Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048);
+    Mix_OpenAudio(44100, MIX_INIT_MP3, 2, 2048);
 }
 
 void SoundManager::loadSound(const char* filePath, const char* soundName) {
@@ -22,6 +22,10 @@ void SoundManager::playSound(const char* soundName) {
     Mix_PlayChannel(-1, soundEffects[soundName], 0);
 }
 
+void SoundManager::playMusic() {
+    Mix_PlayMusic(music, -1);
+}
+
 void SoundManager::setVolume(int volume) {
     for (int i = 0; i < MIX_CHANNELS; ++i) {
         Mix_Volume(i, volume);
@@ -30,10 +34,6 @@ void SoundManager::setVolume(int volume) {
 
 void SoundManager::UpdateSound() {
     setVolume(Engine::GetInstance()->GetMenu()->GetVolume());
-
-    if (music != nullptr) {
-        Mix_PlayMusic(music, -1);
-    }
 
     if (Engine::GetInstance()->GetWarrior()->CheckAttack() || Engine::GetInstance()->GetEnemy()->CheckAttack()
         || Engine::GetInstance()->GetPlayPK()->GetIsAttacking() || Engine::GetInstance()->GetBoss()->GetIsAttacking())

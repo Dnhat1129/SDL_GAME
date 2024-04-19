@@ -30,8 +30,8 @@ Warrior::Warrior(Properties* props) : GameObject(props) {
 	checkload = 0;
 
 	m_Flip = SDL_FLIP_NONE;
-	m_HP = 1000000; max_HP = 1000000;
-	m_dame = 1000;
+	m_HP = 100000; max_HP = 100000;
+	m_dame = 100;
 	time_ssj = 0;
 	time_kame = 0;
 	kame_frame = 0;
@@ -172,9 +172,9 @@ void Warrior::Update(float dt) {
 		}
 
 		if (Input::GetInstance()->GetKeyDown(SDL_SCANCODE_L) && !m_IsDie && time_ssj >= 200 && !ssj) {
-			m_dame = 40;
-			m_HP = 20000;
-			max_HP = 20000;
+			m_dame = 200;
+			m_HP = 200000;
+			max_HP = 200000;
 			TextureManager::GetInstance()->Load("player", "LamGame/Picture/Character/gokussj.png");
 			TextureManager::GetInstance()->Load("player_kame", "LamGame/Picture/Character/ssj_kame.png");
 			checkload = 1;
@@ -327,7 +327,6 @@ void Warrior::Update(float dt) {
 
 	AnimationState();
 	m_Animation->Update();
-	//std::cout << m_Transform->X << " " << m_Transform->Y << std::endl;
 	
 }
 

@@ -18,6 +18,7 @@ public:
     }
     void loadSound(const char* filePath, const char* soundName);
     void playSound(const char* soundName);
+    void playMusic();
     void setVolume(int volume);
     void UpdateSound();
     void Load();

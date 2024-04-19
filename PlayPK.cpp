@@ -127,6 +127,18 @@ PlayPK::PlayPK() {
 void PlayPK::UpdateModePK(float dt) {
 	Vector2D Cam = Camera::GetInstance()->GetPosition();
 
+	if (Engine::GetInstance()->GetMenu()->Getismua()) {
+		for (int i = 0; i < PKList.size(); i++) {
+			if (PKList[i].Gia == luugia) {
+				PKList[i].Isbuy = 1;
+				break;
+			}
+			if (PKList[i].Isbuy) {
+				PKList[i].Gia = 0;
+			}
+		}
+	}
+
 	if (Input::GetInstance()->ListenMouse(Back)) checkback = 1;
 	else checkback = 0;
 	if (checkback || checkstart) return;
@@ -185,7 +197,7 @@ void PlayPK::UpdateModePK(float dt) {
 	if (font->isFontLoaded()) {
 		SDL_Texture* textTexture = font->renderText(std::to_string(luugia), textColor, font->getFont(), Engine::GetInstance()->GetRenderer());
 		if (textTexture) {
-			SDL_Rect customRect = { Cam.X + 342, 582, 30, 30 };
+			SDL_Rect customRect = { 342, 582, 30, 30 };
 			SDL_RenderCopy(Engine::GetInstance()->GetRenderer(), textTexture, NULL, &customRect);
 			SDL_DestroyTexture(textTexture);
 		}
@@ -216,14 +228,9 @@ void PlayPK::UpdateModePK(float dt) {
 		}
 		else checkstart = 0;
 	}
-	if (Engine::GetInstance()->GetMenu()->Getismua()) {
-		for (int i = 0; i < PKList.size(); i++) {
-			if (PKList[i].Gia == luugia) {
-				PKList[i].Gia = 0;
-				PKList[i].Isbuy = 1;
-				break;
-			}
-		}
+	
+	if (chon1 && chon2) {
+		chon1 = false;
 	}
 }
 
