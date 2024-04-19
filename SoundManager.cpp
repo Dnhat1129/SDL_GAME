@@ -41,25 +41,29 @@ void SoundManager::stopSound(const char* soundName) {
     }
 }
 
-void SoundManager::setVolume(const char* soundName, int volume) {
-    if (channels.find(soundName) != channels.end()) {
-        int channel = channels[soundName];
-        Mix_Volume(channel, volume);
+void SoundManager::setVolume(int volume) {
+    for (int i = 0; i < MIX_CHANNELS; ++i) {
+        Mix_Volume(i, volume);
     }
 }
 
 void SoundManager::UpdateSound() {
+    setVolume(Engine::GetInstance()->GetMenu()->GetVolume());
     if (Menustage::GetInstance()->GetIsMenu()) playSound("menu");
     else stopSound("menu");
-    if (Engine::GetInstance()->GetWarrior()->CheckAttack() || Engine::GetInstance()->GetEnemy()->CheckAttack())
+    if (Engine::GetInstance()->GetWarrior()->CheckAttack() || Engine::GetInstance()->GetEnemy()->CheckAttack()
+        || Engine::GetInstance()->GetPlayPK()->GetIsAttacking() || Engine::GetInstance()->GetBoss()->GetIsAttacking())
         playSound("attack");
     else stopSound("attack");
     if (Engine::GetInstance()->GetWarrior()->GetIsRunning() || Engine::GetInstance()->GetEnemy()->GetIsRunning() 
         || Engine::GetInstance()->GetBoss()->GetIsRunning() || Engine::GetInstance()->GetPlayPK()->GetIsRunning())
         playSound("run");
     else stopSound("run");
-    if (Engine::GetInstance()->GetWarrior()->GetIsKame()) playSound("kamehameha");
+    if (Engine::GetInstance()->GetWarrior()->GetIsKame() || Engine::GetInstance()->GetPlayPK()->GetIsSkill()) playSound("kamehameha");
     else stopSound("kamehameha");
+    if (Engine::GetInstance()->GetBoss()->Gettime() >= 175 && Engine::GetInstance()->GetBoss()->Gettime() <= 200)
+        playSound("skill");
+    else stopSound("skill");
 }
 
 void SoundManager::Load() {
@@ -79,4 +83,3 @@ void SoundManager::clean() {
     soundEffects.clear();
     channels.clear();
 }
-

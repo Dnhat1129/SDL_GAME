@@ -38,6 +38,8 @@ public:
 	bool GetContinue() { return IsContinue; }
 	bool GetNewgame() { return IsPauseNewgame; }
 
+	int GetVolume() { return volume; }
+
 private:
 	static Menustage* s_Instance;
 	Input* chuot;
@@ -46,7 +48,7 @@ private:
 	SDL_Rect nutpause;
 	SDL_Rect NewGame;
 	SDL_Rect LeaderBoards;
-	SDL_Rect Options;
+	SDL_Rect Options; SDL_Rect Op1; SDL_Rect OK;
 	SDL_Rect Credits;
 	SDL_Rect Exit;
 	SDL_Rect ModeStory; SDL_Rect ModePK;
@@ -61,6 +63,9 @@ private:
 	bool IsPauseP;
 	bool IsContinue;
 	bool IsPauseNewgame;
+	bool IsOption;
+
+	int volume;
 	Vector2D Cam;
 };
 #endif

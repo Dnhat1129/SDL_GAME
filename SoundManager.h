@@ -2,6 +2,7 @@
 #define SOUNDMANAGER_H
 
 #include <SDL_mixer.h>
+#include <unordered_map>
 #include <map>
 #include <string>
 
@@ -19,7 +20,7 @@ public:
     void loadSound(const char* filePath, const char* soundName);
     void playSound(const char* soundName);
     void stopSound(const char* soundName);
-    void setVolume(const char* soundName, int volume);
+    void setVolume(int volume);
     void UpdateSound();
     void Load();
     void clean();
@@ -30,6 +31,7 @@ private:
         {"run", nullptr},
         {"attack", nullptr},
         {"kamehameha", nullptr},
+        {"skill", nullptr }
 
     };
     std::map<std::string, int> channels;

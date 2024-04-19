@@ -21,6 +21,8 @@ public:
 
     int GetAxisKey(Axis axis);
 
+    SDL_Event GetEvent() { return luu; }
+
 private:
     Input();
     void KeyUp();

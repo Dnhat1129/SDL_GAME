@@ -39,6 +39,8 @@ public:
     Transform* GetPosition() { return e_Transform; }
 
     bool GetIsRunning() { return e_IsRunning; }
+    bool GetIsAttacking() { return e_IsAttacking; }
+
     SDL_RendererFlip GetFlip() { return e_Flip; }
     bool GetComplete2() { return completemap2; }
     bool GetSkill() { return e_skill; }
@@ -47,18 +49,6 @@ public:
         return -1;
     }
     float Gettime() { return e_time; }
-
-    /* Reset() {
-        e_Transform->X = 1280;
-        e_Transform->Y = 512;
-        CurrentBoss = 0;
-        e_HP = Frieza[CurrentBoss].HP;
-        e_dame = Frieza[CurrentBoss].Dame;
-        completemap2 = false;
-        e_time = 0;
-        e_skill = false;
-        e_IsDie = false;
-    }*/
 
 private: Transform* e_Transform;
        int e_Width, e_Height;

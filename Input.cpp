@@ -67,7 +67,6 @@ bool Input::ListenMouse(SDL_Rect check) {
         if (luu.type == SDL_MOUSEBUTTONDOWN) {
             int mouseX, mouseY;
             SDL_GetMouseState(&mouseX, &mouseY);
-            //std::cout << mouseX << " " << mouseY << std::endl;
             if (mouseX >= check.x && mouseX <= check.x + check.w &&
                 mouseY >= check.y && mouseY <= check.y + check.h) {
                 return true;

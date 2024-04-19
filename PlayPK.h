@@ -55,6 +55,8 @@ public:
     SDL_Rect GetChoose2() { return p2_choose; }
 
     bool GetIsRunning() { return p1_IsRunning || p2_IsRunning; }
+    bool GetIsAttacking() { return p1_IsAttacking || p2_IsAttacking; }
+    bool GetIsSkill() { return p1_IsSkill || p2_IsSkill; }
 
     void AnimationState(std::string id);
     

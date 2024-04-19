@@ -60,6 +60,7 @@ public:
     bool GetMap2() { return isMap2; }
     bool Getover() { return gameover; }
 
+
 private:
     bool m_IsRunning = true;
 

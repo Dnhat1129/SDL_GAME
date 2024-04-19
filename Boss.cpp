@@ -125,13 +125,13 @@ void Boss::Update(float dt) {
 
 			if (player->GetKameFrame() == 2 && player->GetIsKame()) {
 				if (player->GetFlip() == SDL_FLIP_NONE) {
-					if (e_Transform->X > m_Transform->X && e_Transform->X <= m_Transform->X + 600 && (abs(e_Transform->Y - m_Transform->Y) < 32.0f))
+					if (e_Transform->X > m_Transform->X && e_Transform->X <= m_Transform->X + 600 && (abs(e_Transform->Y - m_Transform->Y) < 100))
 						e_HP -= 3 * player->GetDame();
 					if (player->GetFlip() == SDL_FLIP_NONE) e_RigidBody->ApplyForceX(5 * FORWARD);
 					else if (player->GetFlip() == SDL_FLIP_HORIZONTAL) e_RigidBody->ApplyForceX(5 * BACKWARD);
 				}
 				else if (player->GetFlip() == SDL_FLIP_HORIZONTAL) {
-					if (e_Transform->X < m_Transform->X && e_Transform->X >= m_Transform->X - 540 && (abs(e_Transform->Y - m_Transform->Y) < 32.0f))
+					if (e_Transform->X < m_Transform->X && e_Transform->X >= m_Transform->X - 540 && (abs(e_Transform->Y - m_Transform->Y) < 100))
 						e_HP -= 3 * player->GetDame();
 					if (player->GetFlip() == SDL_FLIP_NONE) e_RigidBody->ApplyForceX(10 * FORWARD);
 					else if (player->GetFlip() == SDL_FLIP_HORIZONTAL) e_RigidBody->ApplyForceX(10 * BACKWARD);
