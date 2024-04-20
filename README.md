@@ -49,10 +49,14 @@ Game có hai chế độ là chế độ cốt truyệt và chế độ đối k
 ![mau](win.png)
 ![mau](lose.png)
 # Kết luận
-Em nghĩ rằng mức điểm phù hợp là 8.5
+Em nghĩ rằng mức điểm phù hợp là 8.5-9.0
 
 Game được tham khảo từ code mẫu với hệ thống load map nhưng có thêm nhiều chức năng tự tạo ra như:
 
+● Chia thành các file (.h) và (.cpp) để dễ quản lí
+
 ● Chế độ đối kháng PK: mua nhân vật dựa vào vàng kiếm được từ chế độ story, chế độ chơi hai nhân vật
 
-● Xử lí menu, điều chỉnh âm lượng âm thanh, top điểm cao, xử lí hình ảnh game khá mượt, hệ thống tạm ngừng, tiếp tục
+● Xử lí menu, điều chỉnh âm lượng âm thanh,  top điểm cao, xử lí hình ảnh game khá mượt, hệ thống tạm ngừng, tiếp tục
+
+
