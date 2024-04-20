@@ -59,7 +59,9 @@ public:
     bool GetIsAttacking() { return p1_IsAttacking || p2_IsAttacking; }
     bool GetIsSkill() { return p1_IsSkill || p2_IsSkill; }
 
-    int Getluugia() { return luugia; }
+    int Getluugia() {
+        return luugia; 
+    }
 
     void AnimationState(std::string id);
     

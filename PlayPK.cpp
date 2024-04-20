@@ -133,9 +133,11 @@ void PlayPK::UpdateModePK(float dt) {
 				PKList[i].Isbuy = 1;
 				break;
 			}
-			if (PKList[i].Isbuy) {
-				PKList[i].Gia = 0;
-			}
+		}
+	}
+	for (int i = 0; i < PKList.size(); i++) {
+		if (PKList[i].Isbuy) {
+			PKList[i].Gia = 0;
 		}
 	}
 

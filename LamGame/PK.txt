@@ -7,10 +7,10 @@
 0
 5
 7
-so3.png
-
+fide2.png
+skill_fide2.png
 400
-75
+150
 1184
 436
 10000
@@ -20,7 +20,7 @@ so3.png
 0
 5
 7
-so2.png
-
+fide3.png
+skill_fide3.png
 400
-75
+150
