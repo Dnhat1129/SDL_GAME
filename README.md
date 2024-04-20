@@ -51,7 +51,7 @@ Game có hai chế độ là chế độ cốt truyện và chế độ đối k
 ![mau](win.png)
 ![mau](lose.png)
 # Kết luận
-Em nghĩ rằng mức điểm phù hợp là 8.5-9.0
+Em nghĩ rằng mức điểm phù hợp là 8.5
 
 Game được tham khảo từ code mẫu với hệ thống load map nhưng có thêm nhiều chức năng tự tạo ra như:
 
