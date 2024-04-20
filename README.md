@@ -20,7 +20,7 @@ Game được thao tác bằng chuột và bàn phím
 
 ●  Ấn K, L để dùng skill
 
-●  Ấn SPACE để dùng đậu thần hồi phục đầy HPHP
+●  Ấn SPACE để dùng đậu thần hồi phục đầy HP
 ### Mode PK
 #### Player 1
 ●  Ấn nút D, A, W để di chuyển
