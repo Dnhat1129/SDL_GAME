@@ -35,7 +35,7 @@ Game được thao tác bằng chuột và bàn phím
 
 ●  Ấn 2 để dùng skill
 ## Nội dung
-Game có hai chế độ là chế độ cốt truyệt và chế độ đối kháng:
+Game có hai chế độ là chế độ cốt truyện và chế độ đối kháng:
 
 ●  Ở chế độ cốt truyện: Bạn sẽ hóa thân vào Songoku để đánh bại quân đội Frieza dành lại ngọc rồng
 
