@@ -756,7 +756,7 @@ void PlayPK::SetContinue() {
 }
 
 void PlayPK::SetPrevious() {
-	std::ifstream in("LamGame/ModePK/Bought.txt");
+	std::ifstream in("LamGame/Picture/ModePK/Bought.txt");
 	std::string line;
 	int dem = 0;
 	while (std::getline(in, line)) {
