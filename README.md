@@ -10,7 +10,7 @@ ADVENTURE SONGOKU là một câu chuyện lấy cảm hứng từ bộ truyện 
 
 # Chi tiết
 ## Gameplay 
-Xem video [tại đây]([https://www.google.com](https://www.youtube.com/watch?v=sNHdWoWrmbs))
+Xem video [tại đây](https://www.youtube.com/watch?v=sNHdWoWrmbs)
 ## Tutorial 
 Game được thao tác bằng chuột và bàn phím
 ### Mode Story
@@ -19,6 +19,8 @@ Game được thao tác bằng chuột và bàn phím
 ●  Ấn J để tấn công
 
 ●  Ấn K, L để dùng skill
+
+●  Ấn SPACE để dùng đậu thần hồi phục đầy HPHP
 ### Mode PK
 #### Player 1
 ●  Ấn nút D, A, W để di chuyển
@@ -49,10 +51,24 @@ Game có hai chế độ là chế độ cốt truyệt và chế độ đối k
 ![mau](win.png)
 ![mau](lose.png)
 # Kết luận
-Em nghĩ rằng mức điểm phù hợp là 8.5
+Em nghĩ rằng mức điểm phù hợp là 8.5-9.0
 
 Game được tham khảo từ code mẫu với hệ thống load map nhưng có thêm nhiều chức năng tự tạo ra như:
 
+● Chia thành các file (.h) và (.cpp) để dễ quản lí
+
 ● Chế độ đối kháng PK: mua nhân vật dựa vào vàng kiếm được từ chế độ story, chế độ chơi hai nhân vật
 
-● Xử lí menu, điều chỉnh âm lượng âm thanh, top điểm cao, xử lí hình ảnh game khá mượt, hệ thống tạm ngừng, tiếp tục
+● Xử lí menu, điều chỉnh âm lượng âm thanh,  top điểm cao, xử lí hình ảnh game khá mượt, hệ thống tạm ngừng, tiếp tục
+
+Sử dụng những cấu trúc cơ bản:
+
+● Các kĩ thuật lập trình cơ bản: vòng lặp, cấu trúc rẽ nhánh, con trỏ ...
+
+● Sử dụng thư viện SDL: SDL_image, SDL_ttf, SDL_mixer.
+
+● Sử dụng thư viện STL: vector, map, ...
+
+● Nhận sự kiện từ chuột, bàn phím
+
+● Xuất/Nhập file lưu trữ dữ liệu
