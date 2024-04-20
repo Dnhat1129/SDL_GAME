@@ -70,8 +70,6 @@ void Warrior::Draw() {
 				kame_Animation->DrawKame(m_Transform->X, m_Transform->Y, 600, m_Height, kame_frame, m_Flip);
 			else kame_Animation->DrawKame(m_Transform->X - 540, m_Transform->Y, 600, m_Height, kame_frame, m_Flip);
 			 
-		//if (m_Flip == SDL_FLIP_NONE) kame_Animation->Draw(m_Transform->X, m_Transform->Y, 600, m_Height, m_Flip);
-		//else kame_Animation->Draw(m_Transform->X-540, m_Transform->Y, 600, m_Height, m_Flip);
 	}
 	else m_Animation->Draw(m_Transform->X, m_Transform->Y, m_Width, m_Height, m_Flip);
 	
