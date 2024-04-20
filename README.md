@@ -10,7 +10,7 @@ ADVENTURE SONGOKU là một câu chuyện lấy cảm hứng từ bộ truyện 
 
 # Chi tiết
 ## Gameplay 
-Xem video [tại đây]([https://www.google.com](https://www.youtube.com/watch?v=sNHdWoWrmbs))
+Xem video [tại đây](https://www.youtube.com/watch?v=sNHdWoWrmbs)
 ## Tutorial 
 Game được thao tác bằng chuột và bàn phím
 ### Mode Story
